@@ -31,3 +31,15 @@ $titlebar-height: 30px;
         }
     }
  }
+
+:host {
+    background: #202d40;
+    color: #e3eaf5;
+    font: 12px var(--workspace-font);
+    border-bottom: 1px solid #152236;
+    .title { color: #e3eaf5; padding-left: 14px; font-weight: 600; letter-spacing: .3px; }
+}
+:host-context(.platform-win32) {
+    flex-basis: 32px;
+    .title { line-height: 32px; padding-right: 140px; }
+}

@@ -41,7 +41,7 @@ profileDefaults:
     disableDynamicTitle: true
 recoverTabs: true
 enableAnalytics: true
-enableWelcomeTab: true
+enableWelcomeTab: false
 electronFlags: []
 enableAutomaticUpdates: true
 hideTray: false
@@ -58,6 +58,9 @@ hacks:
   disableVibrancyWhileDragging: false
   enableFluentBackground: false
   globalHotkey: null
-language: null
+language: zh-CN
 defaultQuickConnectProvider: "ssh"
-showProfileTree: false
+showProfileTree: true
+customButtonBar:
+  visible: true
+  buttons: []

@@ -19,7 +19,8 @@ export class EditProfileGroupModalComponent<G extends ProfileGroup> {
     @Input() group: G & ConfigProxy<G>
     @Input() providers: ProfileProvider<Profile>[]
     @Input() selectedParentGroup: PartialProfileGroup<ProfileGroup> | undefined
-    groups: PartialProfileGroup<ProfileGroup>[]
+    groups: PartialProfileGroup<ProfileGroup>[] = []
+    loadingGroups = true
 
     getValidParents (groups: PartialProfileGroup<ProfileGroup>[], targetId: string): PartialProfileGroup<ProfileGroup>[] {
         // Build a quick lookup: parentGroupId -> [child groups]
@@ -69,6 +70,7 @@ export class EditProfileGroupModalComponent<G extends ProfileGroup> {
         const groups = await this.profilesService.getProfileGroups()
         this.groups = this.getValidParents(groups, this.group.id)
         this.selectedParentGroup = groups.find(g => g.id === this.group.parentGroupId) ?? undefined
+        this.loadingGroups = false
     }
 
     colorsAutocomplete = text$ => text$.pipe(
@@ -85,14 +87,13 @@ export class EditProfileGroupModalComponent<G extends ProfileGroup> {
         return TAB_COLORS.find(x => x.value === value)?.name ?? value
     }
 
-    groupTypeahead: OperatorFunction<string, readonly PartialProfileGroup<ProfileGroup>[]> = (text$: Observable<string>) =>
-        text$.pipe(
-            debounceTime(200),
-            distinctUntilChanged(),
-            map(q => this.groups.filter(g => !q || g.name.toLowerCase().includes(q.toLowerCase()))),
-        )
+    groupLabel (group: PartialProfileGroup<ProfileGroup>): string {
+        return this.profilesService.resolveProfileGroupPath(group.id).join(' / ')
+    }
 
-    groupFormatter = (g: PartialProfileGroup<ProfileGroup>) => g.name
+    selectParentGroup (groupId: string): void {
+        this.selectedParentGroup = this.groups.find(g => g.id === groupId)
+    }
 
     iconSearch: OperatorFunction<string, string[]> = (text$: Observable<string>) =>
         text$.pipe(
@@ -101,6 +102,9 @@ export class EditProfileGroupModalComponent<G extends ProfileGroup> {
         )
 
     async save () {
+        if (this.loadingGroups) { return }
+        this.group.name = this.group.name.trim()
+        if (!this.group.name) { return }
         if (!this.selectedParentGroup) {
             this.group.parentGroupId = undefined
         } else {

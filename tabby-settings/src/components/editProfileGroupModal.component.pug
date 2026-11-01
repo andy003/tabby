@@ -1,5 +1,5 @@
 .modal-header
-    h3.m-0 {{group.name}}
+    h3.m-0 {{group.name || ('New group'|translate)}}
 
 .modal-body
     .row
@@ -13,17 +13,15 @@
                 )
 
             .mb-3
-                label(translate) Parent Group
-                input.form-control(
-                    type='text',
-                    alwaysVisibleTypeahead,
-                    placeholder='Ungrouped',
-                    [(ngModel)]='selectedParentGroup',
-                    [ngbTypeahead]='groupTypeahead',
-                    [inputFormatter]="groupFormatter",
-                    [resultFormatter]="groupFormatter",
-                    [editable]="false"
+                label(for='profile-parent-group', translate) Parent Group
+                select.form-select(
+                    id='profile-parent-group',
+                    [ngModel]='selectedParentGroup?.id ?? ""',
+                    (ngModelChange)='selectParentGroup($event)',
+                    [disabled]='loadingGroups'
                 )
+                    option(ngValue='', translate) Ungrouped
+                    option(*ngFor='let group of groups', [ngValue]='group.id') {{groupLabel(group)}}
 
             .mb-3
                 label(translate) Icon
@@ -77,5 +75,5 @@
                         i.fas.fa-trash-arrow-up
 
 .modal-footer
-    button.btn.btn-primary((click)='save()', translate) Save
-    button.btn.btn-danger((click)='cancel()', translate) Cancel
+    button.btn.btn-primary((click)='save()', [disabled]='loadingGroups || !group.name.trim()', translate) Save
+    button.btn.btn-secondary((click)='cancel()', translate) Cancel

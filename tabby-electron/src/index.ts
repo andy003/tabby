@@ -193,7 +193,7 @@ export default class ElectronModule {
             return
         }
 
-        this.electron.ipcRenderer.send('window-set-window-controls-color', this.config.store.terminal.colorScheme)
+        this.electron.ipcRenderer.send('window-set-window-controls-color', { foreground: '#252525' })
     }
 }
 

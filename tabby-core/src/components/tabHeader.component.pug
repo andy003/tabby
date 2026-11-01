@@ -16,7 +16,6 @@ profile-icon(
     i.fas.fa-thumbtack
 
 .name(
-    [class.no-hover]='config.store.terminal.hideCloseButton && config.store.terminal.hideTabOptionsButton'
     cdkDrag,
     cdkDragRootElement='tab-header',
     [cdkDragData]='tab',
@@ -24,9 +23,23 @@ profile-icon(
     (cdkDragEnded)='onTabDragEnd()',
 ) {{tab.customTitle || tab.title}}
 
-.buttons
-    button(*ngIf='!config.store.terminal.hideTabOptionsButton',(click)='onContextMenu($event)') !{require('../icons/tab-options.svg')}
+.buttons(*ngIf='!config.store.terminal.hideTabOptionsButton || (!config.store.terminal.hideCloseButton && !tab.effectivelyPinned)', (dblclick)='$event.stopPropagation()')
+    button.tab-options(
+        type='button',
+        *ngIf='!config.store.terminal.hideTabOptionsButton',
+        [attr.aria-label]='"Options"|translate',
+        [title]='"Options"|translate',
+        (click)='$event.stopPropagation(); onContextMenu($event)'
+    ) !{require('../icons/tab-options.svg')}
 
-    button(*ngIf='!config.store.terminal.hideCloseButton && !tab.effectivelyPinned',(click)='app.closeTab(tab, true)') &times;
+    button.tab-close(
+        type='button',
+        *ngIf='!config.store.terminal.hideCloseButton && !tab.effectivelyPinned',
+        [attr.aria-label]='"Close tab"|translate',
+        [title]='"Close tab"|translate',
+        (click)='$event.stopPropagation(); app.closeTab(tab, true)'
+    )
+        svg(viewBox='0 0 16 16', fill='none', aria-hidden='true')
+            path(d='M4 4l8 8M12 4l-8 8', stroke='currentColor', stroke-width='1.5', stroke-linecap='round')
 
 ng-content

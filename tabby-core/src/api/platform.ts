@@ -20,16 +20,50 @@ export interface MessageBoxResult {
     response: number
 }
 
+export type FileTransferState = 'queued'|'running'|'completed'|'failed'|'cancelled'
+
 export abstract class FileTransfer {
+    direction: 'upload'|'download' = 'upload'
+    relativePath = ''
+    isDirectory = false
     abstract getName (): string
     abstract getSize (): number
     abstract close (): void
+
+    async finalize (): Promise<void> { this.close() }
+
+    getState (): FileTransferState { return this.state }
+
+    isActive (): boolean { return this.state === 'queued' || this.state === 'running' }
+
+    isFailed (): boolean { return this.state === 'failed' }
+
+    getError (): string { return this.error }
+
+    getChildren (): FileTransfer[] { return this.children }
+
+    addChild (transfer: FileTransfer): void {
+        this.children.push(transfer)
+        if (this.isCancelled()) { transfer.cancel() }
+    }
+
+    setStarted (): void {
+        if (this.isActive()) { this.state = 'running' }
+    }
+
+    setFailed (error: string): void {
+        if (!this.isCancelled()) {
+            this.state = 'failed'
+            this.error = error
+        }
+    }
 
     getSpeed (): number {
         return this.lastChunkSpeed
     }
 
     getCompletedBytes (): number {
+        if (this.children.length) { return this.children.reduce((sum, child) => sum + child.getCompletedBytes(), 0) }
         return this.completedBytes
     }
 
@@ -38,19 +72,22 @@ export abstract class FileTransfer {
     }
 
     getTotalSize (): number {
+        if (this.children.length) { return this.children.reduce((sum, child) => sum + child.getSize(), 0) }
         return this.totalSize
     }
 
     isComplete (): boolean {
-        return !this.cancelled && (this.completed || this.completedBytes >= this.getSize())
+        return this.state === 'completed'
     }
 
     isCancelled (): boolean {
-        return this.cancelled
+        return this.state === 'cancelled'
     }
 
     cancel (): void {
-        this.cancelled = true
+        if (!this.isActive()) { return }
+        this.state = 'cancelled'
+        for (const child of this.children) { child.cancel() }
         this.close()
     }
 
@@ -63,7 +100,8 @@ export abstract class FileTransfer {
     }
 
     setCompleted (completed: boolean): void {
-        this.completed = completed
+        if (completed && this.children.some(child => !child.isComplete())) { return }
+        if (this.isActive()) { this.state = completed ? 'completed' : 'queued' }
     }
 
     protected increaseProgress (bytes: number): void {
@@ -71,7 +109,7 @@ export abstract class FileTransfer {
             return
         }
         this.completedBytes += bytes
-        this.lastChunkSpeed = bytes * 1000 / (Date.now() - this.lastChunkStartTime)
+        this.lastChunkSpeed = bytes * 1000 / Math.max(1, Date.now() - this.lastChunkStartTime)
         this.lastChunkStartTime = Date.now()
     }
 
@@ -79,16 +117,20 @@ export abstract class FileTransfer {
     private totalSize = 0
     private lastChunkStartTime = Date.now()
     private lastChunkSpeed = 0
-    private cancelled = false
-    private completed = false
+    private state: FileTransferState = 'queued'
+    private error = ''
+    private children: FileTransfer[] = []
     private status = ''
 }
 
 export abstract class FileDownload extends FileTransfer {
+    direction: 'upload'|'download' = 'download'
     abstract write (buffer: Uint8Array): Promise<void>
 }
 
 export abstract class DirectoryDownload extends FileTransfer {
+    isDirectory = true
+    direction: 'upload'|'download' = 'download'
     abstract createDirectory (relativePath: string): Promise<void>
     abstract createFile (relativePath: string, mode: number, size: number): Promise<FileDownload>
 }
@@ -117,24 +159,41 @@ export interface FileUploadOptions {
     multiple: boolean
 }
 
-export class DirectoryUpload {
-    private childrens: (FileUpload|DirectoryUpload)[] = []
-
-    constructor (private name = '') {
-        // Just set name for now.
-    }
+export class DirectoryUpload extends FileTransfer {
+    isDirectory = true
+    constructor (private name = '') { super() }
 
     getName (): string {
         return this.name
     }
 
     getChildrens (): (FileUpload|DirectoryUpload)[] {
-        return this.childrens
+        return this.getChildren() as (FileUpload|DirectoryUpload)[]
     }
 
     pushChildren (item: FileUpload|DirectoryUpload): void {
-        this.childrens.push(item)
+        this.addChild(item)
     }
+
+    getSize (): number { return this.getTotalSize() }
+
+    close (): void { /* Directory uploads only own their child transfers. */ }
+}
+
+/** A visible queue item for directory creation or a failure discovered while scanning. */
+export class TransferTask extends FileTransfer {
+    constructor (
+        private name: string,
+        private size: number,
+        public direction: 'upload'|'download',
+        public isDirectory = false,
+    ) { super() }
+
+    getName (): string { return this.name }
+
+    getSize (): number { return this.getChildren().length ? this.getTotalSize() : this.size }
+
+    close (): void { /* Queue-only tasks do not own an open file. */ }
 }
 
 export type PlatformTheme = 'light'|'dark'
@@ -166,13 +225,13 @@ export abstract class PlatformService {
         if (!event.dataTransfer) {
             return Promise.resolve(result)
         }
+        this.fileTransferStarted.next(result)
 
         const traverseFileTree = (item: any, root: DirectoryUpload = result): Promise<void> => {
             return new Promise((resolve) => {
                 if (item.isFile) {
                     item.file((file: File) => {
                         const transfer = new HTMLFileUpload(file)
-                        this.fileTransferStarted.next(transfer)
                         root.pushChildren(transfer)
                         resolve()
                     })
@@ -268,6 +327,7 @@ export abstract class PlatformService {
     abstract popupContextMenu (menu: MenuItemOptions[], event?: MouseEvent): void
     abstract showMessageBox (options: MessageBoxOptions): Promise<MessageBoxResult>
     abstract pickDirectory (): Promise<string | null>
+    async pickApplication (): Promise<string|null> { return null }
     abstract quit (): void
 }
 

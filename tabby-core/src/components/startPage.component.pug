@@ -1,27 +1,57 @@
-
-.mt-auto.mb-auto
-    .tabby-logo
-    h1.tabby-title Tabby
-        sup α
-
-    .list-group.mb-4
-        a.list-group-item.list-group-item-action.d-flex.pt-3.pb-3(
-            *ngFor='let command of commands; trackBy: buttonsTrackBy',
-            (click)='command.run()',
-        )
-            .d-flex.align-self-center([innerHTML]='sanitizeIcon(command.icon)')
-            span {{command.label}}
-
-footer.d-flex.align-items-center
-    .btn-group.me-auto
-        button.btn.btn-link((click)='homeBase.openGitHub()')
-            i.fab.fa-github
-            span GitHub
-        button.btn.btn-link((click)='homeBase.reportBug()')
-            i.fas.fa-bug
-            span(translate) Report a problem
-
-    .form-control-static.selectable.no-drag(
-        translate='Version: {version}',
-        [translateParams]='{ version: this.homeBase.appVersion }'
-    )
+.home-workspace
+    .home-intro
+        .home-mark
+            i.fas.fa-terminal
+        h1 Tabby
+        p.home-subtitle(translate) Your terminal and remote sessions, in one place
+        button.start-terminal(type='button', (click)='commands.run(canStartLocal ? "local:new-tab" : "core:profile-selector", {})')
+            i.fas.fa-terminal
+            span {{ (canStartLocal ? 'Start local terminal' : 'Start a session')|translate }}
+        .home-links
+            button(type='button', (click)='commands.run("settings:new-profile", {})')
+                i.fas.fa-plus
+                span(translate) New session
+            span ·
+            button(type='button', (click)='commands.run("core:profile-selector", {})')
+                i.fas.fa-bolt
+                span(translate) Quick connect
+    .home-session-columns
+        section.session-section
+            h2
+                i.fas.fa-clock-rotate-left
+                span(translate) Recent sessions
+            button.session-row(type='button', *ngFor='let profile of recentProfiles', (click)='launch(profile)')
+                profile-icon([icon]='profile.icon || "fas fa-terminal"', [color]='profile.color')
+                span {{profile.name}}
+                i.fas.fa-angle-right
+            .empty-sessions(*ngIf='recentProfiles.length == 0')
+                i.far.fa-clock
+                p(translate) Sessions you open will appear here.
+        section.session-section
+            h2
+                i.fas.fa-star
+                span(translate) Saved sessions
+                small {{savedProfiles.length}}
+            button.session-row(type='button', *ngFor='let profile of savedProfiles | slice:0:6', (click)='launch(profile)')
+                profile-icon([icon]='profile.icon || "fas fa-server"', [color]='profile.color')
+                span {{profile.name}}
+                i.fas.fa-angle-right
+            .empty-sessions(*ngIf='savedProfiles.length == 0')
+                i.far.fa-folder-open
+                p(translate) Save an SSH, Telnet or serial connection to get started.
+            button.manage-sessions(type='button', (click)='commands.run("settings:profiles", {})')
+                span(translate) Manage sessions
+                i.fas.fa-arrow-right
+    .home-shortcuts
+        button(type='button', (click)='commands.run("settings:profiles", {})')
+            i.fas.fa-folder-tree
+            span(translate) Session manager
+        button(type='button', (click)='commands.showSelector()')
+            i.fas.fa-toolbox
+            span(translate) Command palette
+        button(type='button', (click)='commands.run("settings:open", {})')
+            i.fas.fa-gears
+            span(translate) Settings
+        button(type='button', (click)='homeBase.openGitHub()')
+            i.fas.fa-circle-question
+            span(translate) Documentation

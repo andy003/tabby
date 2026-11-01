@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Component, Input, HostListener, HostBinding, ViewChildren, ViewChild } from '@angular/core'
+import { Component, Input, HostListener, HostBinding, ViewChildren, TemplateRef } from '@angular/core'
 import { trigger, style, animate, transition, state } from '@angular/animations'
-import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap'
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { CdkDragDrop } from '@angular/cdk/drag-drop'
 
 import { HostAppService, Platform } from '../api/hostApp'
@@ -58,7 +58,7 @@ function makeTabAnimation (dimension: string, size: number) {
     templateUrl: './appRoot.component.pug',
     styleUrls: ['./appRoot.component.scss'],
     animations: [
-        trigger('animateTab', makeTabAnimation('width', 200)),
+        trigger('animateTab', makeTabAnimation('width', 220)),
     ],
 })
 export class AppRootComponent {
@@ -71,10 +71,12 @@ export class AppRootComponent {
     @HostBinding('class.platform-linux') platformClassLinux = process.platform === 'linux'
     @HostBinding('class.no-tabs') noTabs = true
     @ViewChildren(TabBodyComponent) tabBodies: TabBodyComponent[]
-    @ViewChild('activeTransfersDropdown') activeTransfersDropdown: NgbDropdown
     unsortedTabs: BaseTabComponent[] = []
+    homeVisible = false
+    version: string
     updatesAvailable = false
     activeTransfers: FileTransfer[] = []
+    transfersVisible = false
     private logger: Logger
 
     constructor (
@@ -91,6 +93,8 @@ export class AppRootComponent {
         _themes: ThemesService,
     ) {
         // document.querySelector('app-root')?.remove()
+        this.version = platform.getAppVersion()
+        this.app.activeTabChange$.subscribe(() => { this.homeVisible = false })
         this.logger = log.create('main')
         this.logger.info('v', platform.getAppVersion())
 
@@ -190,7 +194,7 @@ export class AppRootComponent {
 
         platform.fileTransferStarted$.subscribe(transfer => {
             this.activeTransfers.push(transfer)
-            this.activeTransfersDropdown.open()
+            this.transfersVisible = true
         })
 
         config.ready$.toPromise().then(async () => {
@@ -247,7 +251,7 @@ export class AppRootComponent {
         if (this.hasVerticalTabs()) {
             return '*'
         }
-        return this.config.store.appearance.flexTabs ? '*' : '200px'
+        return this.config.store.appearance.flexTabs ? '*' : '220px'
     }
 
     onTabsReordered (event: CdkDragDrop<BaseTabComponent[]>) {
@@ -261,18 +265,13 @@ export class AppRootComponent {
         this.app.moveTabToIndex(tab, event.currentIndex)
     }
 
-    onTransfersChange () {
-        if (this.activeTransfers.length === 0) {
-            this.activeTransfersDropdown.close()
-        }
-    }
-
     @HostBinding('class.vibrant') get isVibrant () {
         return this.config.store?.appearance.vibrancy
     }
 
     private async getToolbarButtons (aboveZero: boolean): Promise<Command[]> {
         return (await this.commands.getCommands({ tab: this.app.activeTab ?? undefined }))
+            .filter(x => !['local:new-tab', 'settings:open', 'core:profile-selector'].includes(x.id ?? ''))
             .filter(x => x.locations?.includes(aboveZero ? CommandLocation.RightToolbar : CommandLocation.LeftToolbar))
     }
 
@@ -280,14 +279,25 @@ export class AppRootComponent {
         this.hostWindow.toggleMaximize()
     }
 
+    get activeSidebar (): TemplateRef<unknown>|null {
+        if (this.homeVisible) { return null }
+        const tab = this.app.activeTab
+        const focused = tab instanceof SplitTabComponent ? tab.getFocusedTab() : tab
+        return focused?.getSidebarTemplate() ?? null
+    }
+
+    closeSidebar (): void {
+        const tab = this.app.activeTab
+        const focused = tab instanceof SplitTabComponent ? tab.getFocusedTab() : tab
+        focused?.closeSidebar()
+    }
+
+    async newTerminal (): Promise<void> {
+        const commands = await this.commands.getCommands({})
+        await this.commands.run(commands.some(c => c.id === 'local:new-tab') ? 'local:new-tab' : 'core:profile-selector', {})
+    }
+
     protected isTitleBarNeeded (): boolean {
-        return (
-            this.config.store.appearance.frame === 'full'
-            ||
-                this.hostApp.platform !== Platform.macOS
-                && this.config.store.appearance.frame === 'thin'
-                && this.config.store.appearance.tabsLocation !== 'top'
-                && this.config.store.appearance.tabsLocation !== 'bottom'
-        )
+        return this.config.store.appearance.frame === 'thin' || this.config.store.appearance.frame === 'full'
     }
 }

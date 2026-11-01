@@ -24,37 +24,37 @@
             color-picker(
                 [(model)]='config.store.terminal[this.configKey].foreground',
                 (modelChange)='config.save()',
-                title='FG',
+                [title]='"Foreground"|translate',
                 hint='Foreground'
             )
             color-picker(
                 [(model)]='config.store.terminal[this.configKey].background',
                 (modelChange)='config.save()',
-                title='BG',
+                [title]='"Background"|translate',
                 hint='Background'
             )
             color-picker(
                 [(model)]='config.store.terminal[this.configKey].cursor',
                 (modelChange)='config.save()',
-                title='CU',
+                [title]='"Cursor"|translate',
                 hint='Cursor color'
             )
             color-picker(
                 [(model)]='config.store.terminal[this.configKey].cursorAccent',
                 (modelChange)='config.save()',
-                title='CA',
+                [title]='"Cursor accent"|translate',
                 hint='Block cursor foreground'
             )
             color-picker(
                 [(model)]='config.store.terminal[this.configKey].selection',
                 (modelChange)='config.save()',
-                title='SB',
+                [title]='"Selection background"|translate',
                 hint='Selection background'
             )
             color-picker(
                 [(model)]='config.store.terminal[this.configKey].selectionForeground',
                 (modelChange)='config.save()',
-                title='SF',
+                [title]='"Selection foreground"|translate',
                 hint='Selection foreground'
             )
             color-picker(
@@ -88,7 +88,7 @@
     .list-group.list-group-light.mb-3
         ng-container(*ngFor='let scheme of allColorSchemes')
             .list-group-item.list-group-item-action(
-                [hidden]='filter && !scheme.name.toLowerCase().includes(filter.toLowerCase())',
+                [hidden]='filter && !schemeDisplayName(scheme.name).toLowerCase().includes(filter.toLowerCase())',
                 (click)='selectScheme(scheme)',
                 [class.active]='(currentCustomScheme || currentStockScheme) === scheme'
             )
@@ -98,7 +98,7 @@
                     .ms-2
 
                     .me-auto
-                        span {{scheme.name}}
+                        span {{schemeDisplayName(scheme.name)}}
                         .badge.text-bg-info.ms-2(*ngIf='customColorSchemes.includes(scheme)', translate) Custom
 
                     div

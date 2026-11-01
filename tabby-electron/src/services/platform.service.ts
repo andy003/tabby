@@ -62,15 +62,27 @@ export class ElectronPlatformService extends PlatformService {
     }
 
     async getAllFiles (dir: string, root: DirectoryUpload): Promise<DirectoryUpload> {
-        const items = await fs.readdir(dir, { withFileTypes: true })
+        let items: fsSync.Dirent[] = []
+        try {
+            items = await fs.readdir(dir, { withFileTypes: true })
+        } catch (error) {
+            root.setFailed(error instanceof Error ? error.message : String(error))
+            return root
+        }
         for (const item of items) {
+            if (root.isCancelled()) { break }
             if (item.isDirectory()) {
-                root.pushChildren(await this.getAllFiles(path.join(dir, item.name), new DirectoryUpload(item.name)))
+                const child = new DirectoryUpload(item.name)
+                root.pushChildren(child)
+                await this.getAllFiles(path.join(dir, item.name), child)
             } else {
                 const file = new ElectronFileUpload(path.join(dir, item.name), this.electron)
                 root.pushChildren(file)
-                await wrapPromise(this.zone, file.open())
-                this.fileTransferStarted.next(file)
+                try {
+                    await wrapPromise(this.zone, file.open())
+                } catch (error) {
+                    file.setFailed(error instanceof Error ? error.message : String(error))
+                }
             }
         }
         return root
@@ -274,8 +286,12 @@ export class ElectronPlatformService extends PlatformService {
 
         return Promise.all(paths.map(async p => {
             const transfer = new ElectronFileUpload(p, this.electron)
-            await wrapPromise(this.zone, transfer.open())
             this.fileTransferStarted.next(transfer)
+            try {
+                await wrapPromise(this.zone, transfer.open())
+            } catch (error) {
+                transfer.setFailed(error instanceof Error ? error.message : String(error))
+            }
             return transfer
         }))
     }
@@ -297,12 +313,16 @@ export class ElectronPlatformService extends PlatformService {
             paths = result.filePaths
         }
 
-        const root = new DirectoryUpload()
-        root.pushChildren(await this.getAllFiles(paths[0].split(path.sep).join(path.posix.sep), new DirectoryUpload(path.basename(paths[0]))))
+        if (!paths.length) { return new DirectoryUpload() }
+        const root = new DirectoryUpload(path.basename(paths[0]))
+        root.setStatus(this.translate.instant('Preparing file list'))
+        this.fileTransferStarted.next(root)
+        await this.getAllFiles(paths[0], root)
+        root.setStatus('')
         return root
     }
 
-    async startDownload (name: string, mode: number, size: number, filePath?: string): Promise<FileDownload|null> {
+    async startDownload (name: string, mode: number, size: number, filePath?: string, options: { showInTransfers?: boolean } = {}): Promise<FileDownload|null> {
         if (!filePath) {
             const result = await this.electron.dialog.showSaveDialog(
                 this.hostWindow.getWindow(),
@@ -317,7 +337,7 @@ export class ElectronPlatformService extends PlatformService {
         }
         const transfer = new ElectronFileDownload(filePath, mode, size, this.electron)
         await wrapPromise(this.zone, transfer.open())
-        this.fileTransferStarted.next(transfer)
+        if (options.showInTransfers !== false) { this.fileTransferStarted.next(transfer) }
         return transfer
     }
 
@@ -334,9 +354,13 @@ export class ElectronPlatformService extends PlatformService {
             counter++
         }
 
-        const transfer = new ElectronDirectoryDownload(downloadPath, name, estimatedSize ?? 0, this.electron, this.zone)
-        await wrapPromise(this.zone, transfer.open())
+        const transfer = new ElectronDirectoryDownload(downloadPath, name, estimatedSize ?? 0, this.electron)
         this.fileTransferStarted.next(transfer)
+        try {
+            await wrapPromise(this.zone, transfer.open())
+        } catch (error) {
+            transfer.setFailed(error instanceof Error ? error.message : String(error))
+        }
         return transfer
     }
 
@@ -365,6 +389,18 @@ export class ElectronPlatformService extends PlatformService {
         return result.filePaths[0]
     }
 
+    async pickApplication (): Promise<string|null> {
+        const result = await this.electron.dialog.showOpenDialog(this.hostWindow.getWindow(), {
+            title: this.translate.instant('Select text editor'),
+            properties: ['openFile'],
+            filters: [{
+                name: this.translate.instant('Applications'),
+                extensions: process.platform === 'win32' ? ['exe'] : process.platform === 'darwin' ? ['app', '*'] : ['*'],
+            }],
+        })
+        return result.canceled ? null : result.filePaths[0] ?? null
+    }
+
     getTheme (): PlatformTheme {
         if (this.electron.nativeTheme.shouldUseDarkColors) {
             return 'dark'
@@ -375,56 +411,59 @@ export class ElectronPlatformService extends PlatformService {
 }
 
 class ElectronFileUpload extends FileUpload {
-    private size: number
-    private mode: number
-    private file: fs.FileHandle
-    private buffer: Uint8Array
-    private powerSaveBlocker = 0
+    private size = 0
+    private mode = 0o644
+    private file: fs.FileHandle|undefined
+    private buffer = new Uint8Array(256 * 1024)
+    private powerSaveBlocker: number|null = null
+    private closing: Promise<void>|undefined
 
-    constructor (private filePath: string, private electron: ElectronService) {
-        super()
-        this.buffer = new Uint8Array(256 * 1024)
-        this.powerSaveBlocker = electron.powerSaveBlocker.start('prevent-app-suspension')
-    }
+    constructor (private filePath: string, private electron: ElectronService) { super() }
 
     async open (): Promise<void> {
         const stat = await fs.stat(this.filePath)
         this.size = stat.size
         this.mode = stat.mode
         this.setTotalSize(this.size)
-        this.file = await fs.open(this.filePath, 'r')
     }
 
-    getName (): string {
-        return path.basename(this.filePath)
-    }
+    getName (): string { return path.basename(this.filePath) }
 
-    getMode (): number {
-        return this.mode
-    }
+    getMode (): number { return this.mode }
 
-    getSize (): number {
-        return this.size
-    }
+    getSize (): number { return this.size }
 
     async read (): Promise<Uint8Array> {
+        if (this.isCancelled()) { throw new Error('Transfer cancelled') }
+        if (!this.file) {
+            this.file = await fs.open(this.filePath, 'r')
+            this.powerSaveBlocker = this.electron.powerSaveBlocker.start('prevent-app-suspension')
+            if (this.isCancelled()) { this.close(); throw new Error('Transfer cancelled') }
+        }
         const result = await this.file.read(this.buffer, 0, this.buffer.length, null)
         this.increaseProgress(result.bytesRead)
-        if (this.getCompletedBytes() >= this.getSize()) {
-            this.setCompleted(true)
-        }
         return this.buffer.slice(0, result.bytesRead)
     }
 
+    async finalize (): Promise<void> {
+        this.close()
+        await this.closing
+    }
+
     close (): void {
-        this.electron.powerSaveBlocker.stop(this.powerSaveBlocker)
-        this.file.close()
+        if (this.powerSaveBlocker !== null) { this.electron.powerSaveBlocker.stop(this.powerSaveBlocker); this.powerSaveBlocker = null }
+        if (this.file && !this.closing) {
+            this.closing = this.file.close()
+            this.closing.catch(() => null)
+        }
     }
 }
 
 class ElectronFileDownload extends FileDownload {
-    private file: fs.FileHandle
-    private powerSaveBlocker = 0
+    private file: fs.FileHandle|undefined
+    private opening: Promise<fs.FileHandle>|undefined
+    private closing: Promise<void>|undefined
+    private powerSaveBlocker: number|null = null
 
     constructor (
         private filePath: string,
@@ -433,66 +472,77 @@ class ElectronFileDownload extends FileDownload {
         private electron: ElectronService,
     ) {
         super()
-        this.powerSaveBlocker = electron.powerSaveBlocker.start('prevent-app-suspension')
         this.setTotalSize(size)
     }
 
-    async open (): Promise<void> {
-        this.file = await fs.open(this.filePath, 'w', this.mode)
-    }
+    async open (): Promise<void> { /* Files are opened when their queued transfer starts. */ }
 
-    getName (): string {
-        return path.basename(this.filePath)
-    }
+    getName (): string { return path.basename(this.filePath) }
 
-    getSize (): number {
-        return this.size
+    getSize (): number { return this.size }
+
+    private async ensureFile (): Promise<fs.FileHandle> {
+        if (this.isCancelled()) { throw new Error('Transfer cancelled') }
+        if (!this.opening) {
+            this.opening = (async () => {
+                await fs.mkdir(path.dirname(this.filePath), { recursive: true })
+                const file = await fs.open(this.filePath, 'w', this.mode)
+                this.file = file
+                this.powerSaveBlocker = this.electron.powerSaveBlocker.start('prevent-app-suspension')
+                return file
+            })()
+        }
+        const file = await this.opening
+        if (this.isCancelled()) { this.close(); throw new Error('Transfer cancelled') }
+        return file
     }
 
     async write (buffer: Uint8Array): Promise<void> {
+        const file = await this.ensureFile()
         let pos = 0
         while (pos < buffer.length) {
-            const result = await this.file.write(buffer, pos, buffer.length - pos, null)
+            const result = await file.write(buffer, pos, buffer.length - pos, null)
             this.increaseProgress(result.bytesWritten)
             pos += result.bytesWritten
         }
-        if (this.getCompletedBytes() >= this.getSize()) {
-            this.setCompleted(true)
-        }
+    }
+
+    async finalize (): Promise<void> {
+        await this.ensureFile()
+        this.close()
+        await this.closing
     }
 
     close (): void {
-        this.electron.powerSaveBlocker.stop(this.powerSaveBlocker)
-        this.file.close()
+        if (this.powerSaveBlocker !== null) { this.electron.powerSaveBlocker.stop(this.powerSaveBlocker); this.powerSaveBlocker = null }
+        if (this.file && !this.closing) {
+            this.closing = this.file.close()
+            this.closing.catch(() => null)
+        }
     }
 }
 
 class ElectronDirectoryDownload extends DirectoryDownload {
-    private powerSaveBlocker = 0
+    private powerSaveBlocker: number|null = null
 
     constructor (
         private basePath: string,
         private name: string,
         estimatedSize: number,
         private electron: ElectronService,
-        private zone: NgZone,
     ) {
         super()
-        this.powerSaveBlocker = electron.powerSaveBlocker.start('prevent-app-suspension')
         this.setTotalSize(estimatedSize)
     }
 
     async open (): Promise<void> {
         await fs.mkdir(this.basePath, { recursive: true })
+        this.powerSaveBlocker = this.electron.powerSaveBlocker.start('prevent-app-suspension')
     }
 
-    getName (): string {
-        return this.name
-    }
+    getName (): string { return this.name }
 
-    getSize (): number {
-        return this.getTotalSize()
-    }
+    getSize (): number { return this.getTotalSize() }
 
     async createDirectory (relativePath: string): Promise<void> {
         const fullPath = resolveInsideBase(this.basePath, relativePath)
@@ -501,14 +551,13 @@ class ElectronDirectoryDownload extends DirectoryDownload {
 
     async createFile (relativePath: string, mode: number, size: number): Promise<FileDownload> {
         const fullPath = resolveInsideBase(this.basePath, relativePath)
-        await fs.mkdir(path.dirname(fullPath), { recursive: true })
-
         const fileDownload = new ElectronFileDownload(fullPath, mode, size, this.electron)
-        await wrapPromise(this.zone, fileDownload.open())
+        fileDownload.relativePath = relativePath
+        this.addChild(fileDownload)
         return fileDownload
     }
 
     close (): void {
-        this.electron.powerSaveBlocker.stop(this.powerSaveBlocker)
+        if (this.powerSaveBlocker !== null) { this.electron.powerSaveBlocker.stop(this.powerSaveBlocker); this.powerSaveBlocker = null }
     }
 }

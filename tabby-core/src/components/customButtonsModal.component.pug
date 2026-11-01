@@ -1,0 +1,60 @@
+.modal-header
+    h3.modal-title(translate) Custom buttons
+.modal-body.custom-buttons-editor
+    .editor-description(translate) Create shortcuts for terminal text or application commands. Buttons run in the active tab.
+    .editor-columns
+        .button-list-panel
+            .button-list(role='list', [attr.aria-label]='"Custom buttons"|translate')
+                button.button-list-item(
+                    *ngFor='let button of buttons',
+                    type='button',
+                    [class.selected]='button.id === selectedId',
+                    [attr.aria-pressed]='button.id === selectedId',
+                    (click)='selectedId = button.id',
+                    [disabled]='saving'
+                )
+                    i.fas([class.fa-terminal]='button.action === "send-text"', [class.fa-bolt]='button.action === "command"', aria-hidden='true')
+                    span {{button.label || ('New button'|translate)}}
+            .list-actions
+                button.btn.btn-secondary.btn-sm(type='button', (click)='addButton()', [disabled]='saving')
+                    i.fas.fa-plus.me-1
+                    span(translate) Add button
+                button.btn.btn-secondary.btn-sm(type='button', (click)='moveButton(-1)', [disabled]='saving || selectedIndex <= 0', [ngbTooltip]='"Move up"|translate', [attr.aria-label]='"Move up"|translate')
+                    i.fas.fa-arrow-up
+                button.btn.btn-secondary.btn-sm(type='button', (click)='moveButton(1)', [disabled]='saving || selectedIndex < 0 || selectedIndex >= buttons.length - 1', [ngbTooltip]='"Move down"|translate', [attr.aria-label]='"Move down"|translate')
+                    i.fas.fa-arrow-down
+        fieldset.button-editor(*ngIf='selected as button', [disabled]='saving')
+            .mb-3
+                label.form-label(for='custom-button-label', translate) Button label
+                input#custom-button-label.form-control(type='text', [(ngModel)]='button.label', maxlength='80', required, autofocus)
+            .mb-3
+                label.form-label(for='custom-button-action', translate) Action
+                select#custom-button-action.form-select([(ngModel)]='button.action')
+                    option(value='send-text', translate) Send text
+                    option(value='command', translate) Application command
+            ng-container(*ngIf='button.action === "send-text"')
+                .mb-3
+                    label.form-label(for='custom-button-text', translate) Text to send
+                    textarea#custom-button-text.form-control.command-text(rows='5', [(ngModel)]='button.text', [placeholder]='"Example: ls -lah"|translate', spellcheck='false', required)
+                .form-check.mb-2
+                    input#custom-button-enter.form-check-input(type='checkbox', [(ngModel)]='button.appendNewline')
+                    label.form-check-label(for='custom-button-enter', translate) Append Enter to execute
+                .form-check.mb-2
+                    input#custom-button-escapes.form-check-input(type='checkbox', [(ngModel)]='button.interpretEscapes')
+                    label.form-check-label(for='custom-button-escapes', translate) Interpret escape sequences
+                .editor-hint(translate) Interpret backslash escapes for Enter, Tab, Escape and control characters.
+            .mb-3(*ngIf='button.action === "command"')
+                label.form-label(for='custom-button-command', translate) Application command
+                select#custom-button-command.form-select([(ngModel)]='button.commandId', required)
+                    option(value='', disabled, translate) Select a command
+                    option(*ngIf='button.commandId && !selectedCommandAvailable', [value]='button.commandId') {{ 'Unavailable command'|translate }} ({{button.commandId}})
+                    option(*ngFor='let command of commands', [value]='command.id') {{command.label}}
+                .editor-hint.mt-2(translate) Contextual commands are enabled when the active tab supports them.
+            button.btn.btn-link.remove-button(type='button', (click)='removeButton()')
+                i.far.fa-trash-can.me-2
+                span(translate) Delete button
+        .empty-editor(*ngIf='!selected', translate) Add a button to get started.
+.modal-footer
+    .save-hint.me-auto(*ngIf='!valid', translate) Each button needs a label and an action.
+    button.btn.btn-primary(type='button', (click)='save()', [disabled]='!valid || saving', translate) Save
+    button.btn.btn-secondary(type='button', (click)='modal.dismiss()', [disabled]='saving', translate) Cancel

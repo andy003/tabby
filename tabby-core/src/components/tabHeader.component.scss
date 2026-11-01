@@ -7,14 +7,16 @@ $tabs-height: 38px;
 
     > * { cursor: pointer; }
 
-    flex: 1000 1 200px;
-    width: 200px;
+    flex: 1000 1 220px;
+    width: 220px;
     // flex-basis and width are also set through animation on AppRoot
 
-    padding: 0 10px;
+    padding: 0 8px 0 10px;
 
     display: flex;
     flex-direction: row;
+    align-items: center;
+    gap: 6px;
     min-width: 0;
 
     overflow: hidden;
@@ -31,21 +33,24 @@ $tabs-height: 38px;
 
     .index {
         flex: none;
-        font-weight: bold;
         -webkit-app-region: no-drag;
         cursor: -webkit-grab;
 
-        width: calc(22px * var(--spaciness));
-        border-radius: 10px;
+        min-width: 20px;
+        height: 18px;
+        padding: 0 3px;
+        line-height: 18px;
+        border-radius: 4px;
         text-align: center;
-        transition: 0.25s all;
-        align-self: center;
-        margin-top: 1px;
+        font-variant-numeric: tabular-nums;
     }
 
     profile-icon {
+        flex: none;
+        width: 16px;
+        height: 16px;
+        justify-content: center;
         font-size: 13px;
-        margin: 1px 4px 0 0;
     }
 
     .pin-indicator {
@@ -53,32 +58,26 @@ $tabs-height: 38px;
         align-items: center;
         flex: none;
         font-size: 12px;
-        margin: 1px 6px 0 0;
         opacity: 0.8;
     }
 
     .name {
-        flex: auto;
-        margin-top: 1px;
+        flex: 1 1 auto;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         min-width: 0;
-        align-self: center;
-    }
-
-    .index + .name {
-        margin-left: 10px;
+        line-height: 20px;
     }
 
     .buttons {
         display: flex;
-        position: absolute;
+        flex: none;
         align-items: center;
-        height: 100%;
-        top: 2px;
-        right: 3px;
+        gap: 2px;
         opacity: 0;
+        pointer-events: none;
+        transition: opacity .12s ease;
 
         button {
             display: flex;
@@ -87,34 +86,35 @@ $tabs-height: 38px;
             justify-content: center;
 
             background: transparent;
+            border: 0;
+            padding: 0;
             -webkit-app-region: no-drag;
 
-            $button-size: 26px;
+            $button-size: 24px;
             width: $button-size;
             height: $button-size;
-            border-radius: $button-size / 6;
+            border-radius: 4px;
             line-height: $button-size;
             align-self: center;
 
             text-align: center;
-            font-size: 20px;
+            color: inherit;
 
-            &:focus {
-              outline: 0;
+            svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--workspace-accent);
+                outline-offset: -2px;
             }
         }
     }
 
-    &:hover .name:not(.no-hover) {
-        -webkit-mask-image: linear-gradient(black 0 0), linear-gradient(to left, transparent 0%, transparent 50%, black 100%);
-        -webkit-mask-size: calc(100% - 80px) auto, 80px auto;
-        -webkit-mask-repeat: no-repeat;
-        -webkit-mask-position: left, right;
-    }
-
-    &:hover .buttons {
-        transition: 0.25s opacity;
+    &:hover .buttons, &.active .buttons, &:focus-within .buttons {
         opacity: 1;
+        pointer-events: auto;
     }
 
     &.drag-region {
@@ -168,4 +168,8 @@ $tabs-height: 38px;
         left: 0;
         right: 0;
     }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :host .buttons { transition: none; }
 }

@@ -9,6 +9,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap'
 })
 export class RenameTabModalComponent {
     @Input() value: string
+    @Input() title: string|undefined
+    @Input() requireNonEmpty = false
     @ViewChild('input') input: ElementRef
 
     constructor (
@@ -23,6 +25,10 @@ export class RenameTabModalComponent {
     }
 
     save () {
+        if (this.requireNonEmpty) {
+            this.value = this.value.trim()
+            if (!this.value) { return }
+        }
         this.modalInstance.close(this.value)
     }
 

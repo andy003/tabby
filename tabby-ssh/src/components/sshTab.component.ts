@@ -1,7 +1,7 @@
 import * as russh from 'russh'
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker'
 import colors from 'ansi-colors'
-import { Component, Injector, HostListener } from '@angular/core'
+import { Component, Injector, ViewChild, TemplateRef } from '@angular/core'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { GetRecoveryTokenOptions, Platform, ProfilesService, RecoveryToken } from 'tabby-core'
 import { BaseTerminalTabComponent, ConnectableTerminalTabComponent } from 'tabby-terminal'
@@ -27,6 +27,7 @@ export class SSHTabComponent extends ConnectableTerminalTabComponent<SSHProfile>
     sshSession: SSHSession|null = null
     session: SSHShellSession|null = null
     sftpPanelVisible = false
+    @ViewChild('sftpSidebar') sftpSidebar: TemplateRef<unknown>
     sftpPath = '/'
     enableToolbar = true
     activeKIPrompt: KeyboardInteractivePrompt|null = null
@@ -175,6 +176,9 @@ export class SSHTabComponent extends ConnectableTerminalTabComponent<SSHProfile>
         await session.start()
 
         this.session?.resize(this.size.columns, this.size.rows)
+        if (this.config.store.ssh.autoOpenSFTP) {
+            await this.openSFTP()
+        }
     }
 
     async initializeSession (): Promise<void> {
@@ -235,16 +239,17 @@ export class SSHTabComponent extends ConnectableTerminalTabComponent<SSHProfile>
         )).response === 0
     }
 
-    async openSFTP (): Promise<void> {
-        this.sftpPath = await this.session?.getWorkingDirectory() ?? this.sftpPath
-        setTimeout(() => {
-            this.sftpPanelVisible = true
-        }, 100)
+    getSidebarTemplate (): TemplateRef<unknown>|null {
+        return this.sftpPanelVisible ? this.sftpSidebar : null
     }
 
-    @HostListener('click')
-    onClick (): void {
+    closeSidebar (): void {
         this.sftpPanelVisible = false
+    }
+
+    async openSFTP (): Promise<void> {
+        this.sftpPath = await this.session?.getWorkingDirectory() ?? this.sftpPath
+        this.sftpPanelVisible = true
     }
 
     protected isSessionExplicitlyTerminated (): boolean {

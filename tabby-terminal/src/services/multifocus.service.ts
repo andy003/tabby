@@ -32,6 +32,8 @@ export class MultifocusService {
         })
     }
 
+    get isActive (): boolean { return this.inputSubscription !== null }
+
     start (currentTab: BaseTerminalTabComponent<any>, tabs: BaseTerminalTabComponent<any>[]): void {
         if (this.inputSubscription) {
             return

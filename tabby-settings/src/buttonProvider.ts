@@ -24,6 +24,7 @@ export class ButtonProvider extends ToolbarButtonProvider {
 
     provide (): ToolbarButton[] {
         return [{
+            id: 'settings:open',
             icon: require('./icons/cog.svg'),
             title: this.translate.instant('Settings'),
             touchBarNSImage: 'NSTouchBarComposeTemplate',

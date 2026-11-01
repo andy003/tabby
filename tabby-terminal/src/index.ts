@@ -5,7 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { ToastrModule } from 'ngx-toastr'
 import { NgxColorsModule } from 'ngx-colors'
 
-import TabbyCorePlugin, { ConfigProvider, HotkeyProvider, TabContextMenuItemProvider, CLIHandler } from 'tabby-core'
+import TabbyCorePlugin, { CommandProvider, ConfigProvider, HotkeyProvider, TabContextMenuItemProvider, CLIHandler } from 'tabby-core'
 import { SettingsTabProvider } from 'tabby-settings'
 
 import { AppearanceSettingsTabComponent } from './components/appearanceSettingsTab.component'
@@ -36,6 +36,8 @@ import { XTermFrontend, XTermWebGLFrontend } from './frontends/xtermFrontend'
 import { TerminalCLIHandler } from './cli'
 import { DefaultColorSchemes } from './colorSchemes'
 
+import { TerminalCommandProvider } from './commands'
+
 /** @hidden */
 @NgModule({
     imports: [
@@ -47,6 +49,7 @@ import { DefaultColorSchemes } from './colorSchemes'
         NgxColorsModule,
     ],
     providers: [
+        { provide: CommandProvider, useClass: TerminalCommandProvider, multi: true },
         { provide: SettingsTabProvider, useClass: AppearanceSettingsTabProvider, multi: true },
         { provide: SettingsTabProvider, useClass: ColorSchemeSettingsTabProvider, multi: true },
         { provide: SettingsTabProvider, useClass: TerminalSettingsTabProvider, multi: true },

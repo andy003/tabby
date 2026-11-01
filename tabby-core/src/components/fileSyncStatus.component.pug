@@ -1,0 +1,19 @@
+.sync-dropdown(*ngIf='files.summary as summary', ngbDropdown, placement='top-end', container='body')
+    button.sync-summary(type='button', ngbDropdownToggle, [attr.data-state]='summary.state', [title]='summary.remotePath + (summary.error ? " — " + summary.error : "")')
+        i([class]='files.icon(summary)', aria-hidden='true')
+        span.sync-name {{summary.name}}
+        span {{files.label(summary)|translate}}
+    .sync-menu(ngbDropdownMenu)
+        .sync-heading(translate) Remote file synchronization
+        .sync-entry(*ngFor='let entry of files.entries', [attr.data-state]='entry.state')
+            .sync-file
+                i([class]='files.icon(entry)', aria-hidden='true')
+                strong {{entry.name}}
+                span {{files.label(entry)|translate}}
+            .sync-path {{entry.connection}} · {{entry.remotePath}}
+            .sync-time(*ngIf='entry.syncedAt') {{ 'Last synced'|translate }}: {{entry.syncedAt|date:'HH:mm:ss'}}
+            .sync-error(*ngIf='entry.error') {{entry.error}}
+            .sync-path(*ngIf='entry.localPath && (entry.state === "error" || entry.state === "disconnected")') {{ 'Local copy'|translate }}: {{entry.localPath}}
+            .sync-actions
+                button(type='button', *ngIf='entry.openLocal', (click)='openLocal(entry)', translate) Open local copy
+                button(type='button', *ngIf='entry.retry && (entry.state === "error" || entry.state === "pending")', (click)='retry(entry)', translate) Retry sync

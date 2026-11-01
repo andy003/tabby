@@ -113,9 +113,13 @@ export class SFTPSession {
     async upload (path: string, transfer: FileUpload): Promise<void> {
         this.logger.info('Uploading into', path)
         const tempPath = path + '.tabby-upload'
+        let handle: SFTPFileHandle|undefined = undefined
+        transfer.setStarted()
         try {
-            const handle = await this.open(tempPath, russh.OPEN_WRITE | russh.OPEN_CREATE)
+            if (transfer.isCancelled()) { throw new Error('Transfer cancelled') }
+            handle = await this.open(tempPath, russh.OPEN_WRITE | russh.OPEN_CREATE | russh.OPEN_TRUNCATE)
             while (true) {
+                if (transfer.isCancelled()) { throw new Error('Transfer cancelled') }
                 const chunk = await transfer.read()
                 if (!chunk.length) {
                     break
@@ -123,34 +127,45 @@ export class SFTPSession {
                 await handle.write(chunk)
             }
             await handle.close()
+            handle = undefined
+            await transfer.finalize()
+            if (transfer.isCancelled()) { throw new Error('Transfer cancelled') }
             await this.unlink(path).catch(() => null)
             await this.rename(tempPath, path)
-            transfer.close()
+            transfer.setCompleted(true)
         } catch (e) {
-            transfer.setStatus(e instanceof Error ? e.message : String(e))
-            transfer.cancel()
+            transfer.setFailed(e instanceof Error ? e.message : String(e))
+            transfer.close()
             this.unlink(tempPath).catch(() => null)
             throw e
+        } finally {
+            await handle?.close().catch(() => null)
         }
     }
 
     async download (path: string, transfer: FileDownload): Promise<void> {
         this.logger.info('Downloading', path)
+        let handle: SFTPFileHandle|undefined = undefined
+        transfer.setStarted()
         try {
-            const handle = await this.open(path, russh.OPEN_READ)
+            if (transfer.isCancelled()) { throw new Error('Transfer cancelled') }
+            handle = await this.open(path, russh.OPEN_READ)
             while (true) {
+                if (transfer.isCancelled()) { throw new Error('Transfer cancelled') }
                 const chunk = await handle.read()
                 if (!chunk.length) {
                     break
                 }
                 await transfer.write(chunk)
             }
-            transfer.close()
-            handle.close()
+            await transfer.finalize()
+            transfer.setCompleted(true)
         } catch (e) {
-            transfer.setStatus(e instanceof Error ? e.message : String(e))
-            transfer.cancel()
+            transfer.setFailed(e instanceof Error ? e.message : String(e))
+            transfer.close()
             throw e
+        } finally {
+            await handle?.close().catch(() => null)
         }
     }
 

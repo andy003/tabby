@@ -1,8 +1,10 @@
 import { Component } from '@angular/core'
-import { DomSanitizer } from '@angular/platform-browser'
 import { HomeBaseService } from '../services/homeBase.service'
 import { CommandService } from '../services/commands.service'
-import { Command, CommandLocation } from '../api/commands'
+import { ProfilesService } from '../services/profiles.service'
+import { ConfigService } from '../services/config.service'
+import { PartialProfile, Profile } from '../api/profileProvider'
+import { BaseComponent } from './base.component'
 
 /** @hidden */
 @Component({
@@ -10,26 +12,33 @@ import { Command, CommandLocation } from '../api/commands'
     templateUrl: './startPage.component.pug',
     styleUrls: ['./startPage.component.scss'],
 })
-export class StartPageComponent {
-    version: string
-    commands: Command[] = []
+export class StartPageComponent extends BaseComponent {
+    savedProfiles: PartialProfile<Profile>[] = []
+    recentProfiles: PartialProfile<Profile>[] = []
+    canStartLocal = false
 
     constructor (
-        private domSanitizer: DomSanitizer,
         public homeBase: HomeBaseService,
-        commands: CommandService,
-    ) {
-        commands.getCommands({}).then(c => {
-            this.commands = c.filter(x => x.locations?.includes(CommandLocation.StartPage))
+        public commands: CommandService,
+        public profiles: ProfilesService,
+        private config: ConfigService,
+    ) { super() }
+
+    ngOnInit (): void {
+        this.loadProfiles()
+        this.subscribeUntilDestroyed(this.config.changed$, () => this.loadProfiles())
+        this.commands.getCommands({}).then(commands => {
+            this.canStartLocal = commands.some(c => c.id === 'local:new-tab')
         })
     }
 
-    sanitizeIcon (icon?: string): any {
-        return this.domSanitizer.bypassSecurityTrustHtml(icon ?? '')
+    private async loadProfiles (): Promise<void> {
+        this.savedProfiles = (await this.profiles.getProfiles({ includeBuiltin: false })).filter(p => !p.isTemplate && !this.config.store.profileBlacklist.includes(p.id))
+        this.recentProfiles = this.profiles.getRecentProfiles().filter(p => !this.config.store.profileBlacklist.includes(p.id))
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    buttonsTrackBy (_, btn: Command): any {
-        return btn.label + btn.icon
+    async launch (profile: PartialProfile<Profile>): Promise<void> {
+        const current = (await this.profiles.getProfiles()).find(p => p.id === profile.id) ?? profile
+        await this.profiles.launchProfile(current)
     }
 }

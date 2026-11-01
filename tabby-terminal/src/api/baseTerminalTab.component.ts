@@ -500,6 +500,17 @@ export class BaseTerminalTabComponent<P extends BaseTerminalProfile> extends Bas
         return items
     }
 
+    get canSendCustomInput (): boolean {
+        return this.frontendIsReady && !!this.session?.open
+    }
+
+    sendCustomInput (text: string): void {
+        if (this.canSendCustomInput) {
+            this.sendInput(text)
+            this.frontend?.focus()
+        }
+    }
+
     /**
      * Feeds input into the active session
      */

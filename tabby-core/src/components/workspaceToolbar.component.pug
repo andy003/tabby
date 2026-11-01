@@ -1,0 +1,117 @@
+nav.workspace-menubar([attr.aria-label]='"Application menu"|translate')
+    .menu(ngbDropdown)
+        button.menu-button(type='button', ngbDropdownToggle, translate) Terminal
+        .workspace-menu(ngbDropdownMenu)
+            button(ngbDropdownItem, (click)='run("local:new-tab")', [disabled]='!availableCommands.has("local:new-tab")', translate) New terminal
+            button(ngbDropdownItem, (click)='run("core:profile-selector")', translate) Quick connect
+            .dropdown-divider
+            button(ngbDropdownItem, (click)='app.reopenLastTab()', translate) Reopen closed tab
+            button(ngbDropdownItem, (click)='closeTab()', [disabled]='!app.activeTab', translate) Close tab
+            .dropdown-divider
+            button(ngbDropdownItem, (click)='app.closeWindow()', translate) Exit
+    .menu(ngbDropdown)
+        button.menu-button(type='button', ngbDropdownToggle, translate) Sessions
+        .workspace-menu(ngbDropdownMenu)
+            button(ngbDropdownItem, (click)='run("settings:new-profile")', [disabled]='!availableCommands.has("settings:new-profile")', translate) New session
+            button(ngbDropdownItem, (click)='run("settings:profiles")', [disabled]='!availableCommands.has("settings:profiles")', translate) Manage sessions
+            button(ngbDropdownItem, (click)='toggleSessions()', translate) Toggle session sidebar
+    .menu(ngbDropdown)
+        button.menu-button(type='button', ngbDropdownToggle, translate) View
+        .workspace-menu(ngbDropdownMenu)
+            button(ngbDropdownItem, (click)='homeRequested.emit()', translate) Home
+            button(ngbDropdownItem, (click)='toggleSessions()', translate) Toggle session sidebar
+            button(ngbDropdownItem, (click)='hostWindow.toggleFullscreen()', translate) Full screen
+            button(ngbDropdownItem, (click)='toggleCustomButtonBar()', [attr.aria-pressed]='config.store.customButtonBar.visible', translate) Toggle button bar
+            .dropdown-divider
+            button(ngbDropdownItem, (click)='run("terminal:split-right")', [disabled]='!availableCommands.has("terminal:split-right")', translate) Split vertically
+            button(ngbDropdownItem, (click)='run("terminal:split-bottom")', [disabled]='!availableCommands.has("terminal:split-bottom")', translate) Split horizontally
+    .menu(ngbDropdown)
+        button.menu-button(type='button', ngbDropdownToggle, translate) Tools
+        .workspace-menu(ngbDropdownMenu)
+            button(ngbDropdownItem, (click)='commands.showSelector()', translate) Command palette
+            button(ngbDropdownItem, (click)='editCustomButtons()', translate) Custom buttons
+            button(ngbDropdownItem, (click)='transfersRequested.emit()', translate) File transfers
+            button(ngbDropdownItem, (click)='run("ssh:sftp")', [disabled]='!availableCommands.has("ssh:sftp")', translate) SFTP
+            button(ngbDropdownItem, (click)='run("ssh:tunnels")', [disabled]='!availableCommands.has("ssh:tunnels")', translate) SSH tunnels
+            button(ngbDropdownItem, (click)='run("terminal:multiexec")', [disabled]='!availableCommands.has("terminal:multiexec")', translate) MultiExec
+    button.menu-button(type='button', (click)='run("settings:open")', translate) Settings
+    .menu(ngbDropdown)
+        button.menu-button(type='button', ngbDropdownToggle, translate) Help
+        .workspace-menu(ngbDropdownMenu)
+            button(ngbDropdownItem, (click)='homeBase.openGitHub()', translate) Documentation
+            button(ngbDropdownItem, (click)='homeBase.reportBug()', translate) Report a problem
+            button(ngbDropdownItem, (click)='run("settings:open")', translate) About Tabby
+
+.workspace-ribbon(role='toolbar', [attr.aria-label]='"Session tools"|translate')
+    button.ribbon-button(type='button', (click)='run("settings:new-profile")', [disabled]='!availableCommands.has("settings:new-profile")')
+        i.fas.fa-desktop.icon-session
+        span(translate) Session
+    button.ribbon-button(type='button', (click)='run("local:new-tab")', [disabled]='!availableCommands.has("local:new-tab")')
+        i.fas.fa-terminal.icon-terminal
+        span(translate) Terminal
+    button.ribbon-button(type='button', (click)='commands.showSelector()')
+        i.fas.fa-toolbox.icon-tools
+        span(translate) Tools
+    .ribbon-separator
+    button.ribbon-button(type='button', (click)='toggleSessions()', [class.selected]='config.store.showProfileTree', [attr.aria-pressed]='config.store.showProfileTree')
+        i.fas.fa-star.icon-sessions
+        span(translate) Sessions
+    .ribbon-dropdown(ngbDropdown)
+        button.ribbon-button(type='button', ngbDropdownToggle)
+            i.fas.fa-display.icon-view
+            span(translate) View
+        .workspace-menu(ngbDropdownMenu)
+            button(ngbDropdownItem, (click)='homeRequested.emit()', translate) Home
+            button(ngbDropdownItem, (click)='toggleSessions()', translate) Toggle session sidebar
+            button(ngbDropdownItem, (click)='hostWindow.toggleFullscreen()', translate) Full screen
+            button(ngbDropdownItem, (click)='toggleCustomButtonBar()', [attr.aria-pressed]='config.store.customButtonBar.visible', translate) Toggle button bar
+    .ribbon-dropdown(ngbDropdown)
+        button.ribbon-button(type='button', ngbDropdownToggle, [disabled]='!availableCommands.has("terminal:split-right")')
+            i.fas.fa-table-columns.icon-split
+            span(translate) Split
+        .workspace-menu(ngbDropdownMenu)
+            button(ngbDropdownItem, (click)='run("terminal:split-right")', translate) Split vertically
+            button(ngbDropdownItem, (click)='run("terminal:split-bottom")', translate) Split horizontally
+    button.ribbon-button(type='button', (click)='run("terminal:multiexec")', [disabled]='!availableCommands.has("terminal:multiexec")', [class.selected]='availableCommands.get("terminal:multiexec")?.checked', [attr.aria-pressed]='availableCommands.get("terminal:multiexec")?.checked || false', [ngbTooltip]='"Broadcast input to all terminals; click again to stop"|translate')
+        i.fas.fa-arrows-up-to-line.icon-multiexec
+        span(translate) MultiExec
+    button.ribbon-button(type='button', (click)='run("ssh:tunnels")', [disabled]='!availableCommands.has("ssh:tunnels")', [ngbTooltip]='"Port forwarding for the active SSH session"|translate')
+        i.fas.fa-network-wired.icon-tunneling
+        span(translate) Tunneling
+    button.ribbon-button(type='button', (click)='run("ssh:sftp")', [disabled]='!availableCommands.has("ssh:sftp")', [class.selected]='availableCommands.get("ssh:sftp")?.checked', [attr.aria-pressed]='availableCommands.get("ssh:sftp")?.checked || false', [ngbTooltip]='"File browser for the active SSH session"|translate')
+        i.fas.fa-folder-open.icon-sftp
+        span(translate) SFTP
+    button.ribbon-button(type='button', (click)='transfersRequested.emit()', [class.selected]='transfersVisible', [attr.aria-expanded]='transfersVisible')
+        i.fas.fa-arrow-right-arrow-left.icon-transfers
+        span(translate) File transfers
+    .ribbon-separator
+    button.ribbon-button(type='button', (click)='run("settings:open")')
+        i.fas.fa-gears.icon-settings
+        span(translate) Settings
+    button.ribbon-button(type='button', (click)='homeBase.openGitHub()')
+        i.fas.fa-circle-question.icon-help
+        span(translate) Help
+    .ribbon-spacer
+    button.ribbon-button.exit-button(type='button', (click)='app.closeWindow()')
+        i.fas.fa-power-off.icon-exit
+        span(translate) Exit
+
+.custom-button-bar(*ngIf='config.store.customButtonBar.visible', (contextmenu)='showButtonContextMenu($event)')
+    span.bar-label(translate) Custom buttons
+    .custom-button-list(role='toolbar', [attr.aria-label]='"Custom buttons"|translate')
+        .custom-button-slot(*ngFor='let button of customButtons', (contextmenu)='showButtonContextMenu($event, button)')
+            button.custom-button(
+                type='button',
+                [disabled]='!customButtonEnabled(button)',
+                [ngbTooltip]='button.label',
+                (click)='runCustomButton(button)'
+            )
+                i.fas([class.fa-terminal]='button.action === "send-text"', [class.fa-bolt]='button.action === "command"', aria-hidden='true')
+                span {{button.label}}
+        span.bar-empty(*ngIf='customButtons.length === 0', translate) Add your frequently used commands here
+    button.bar-action(type='button', (click)='editCustomButtons(true)', [ngbTooltip]='"Add button"|translate', [attr.aria-label]='"Add button"|translate')
+        i.fas.fa-plus
+    button.bar-action(type='button', (click)='editCustomButtons()', [ngbTooltip]='"Manage buttons"|translate', [attr.aria-label]='"Manage buttons"|translate')
+        i.fas.fa-sliders
+
+session-context-menu

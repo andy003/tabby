@@ -2,6 +2,8 @@
  * See [[ToolbarButtonProvider]]
  */
 export interface ToolbarButton {
+    /** Stable command ID for menus and keyboard-driven interfaces. */
+    id?: string
     /**
      * Raw SVG icon code
      */

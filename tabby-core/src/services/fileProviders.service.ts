@@ -46,7 +46,7 @@ export class FileProvidersService {
         return this.selector.show(
             this.translate.instant('Select file storage'),
             providers.map(p => ({
-                name: p.name,
+                name: this.translate.instant(p.name),
                 result: p,
             })),
         )

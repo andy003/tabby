@@ -49,7 +49,7 @@
                                 button.list-group-item.list-group-item-action.link-card((click)='homeBase.openGitHub()')
                                     i.fab.fa-fw.fa-github
                                     div
-                                        div GitHub
+                                        div(translate) GitHub
                                         small.text-muted(translate) Source code
 
                                 button.list-group-item.list-group-item-action.link-card((click)='showReleaseNotes()')
@@ -71,7 +71,7 @@
                             option(
                                 [value]='lang.code',
                                 *ngFor='let lang of allLanguages'
-                            ) {{lang.name}}
+                            ) {{lang.name|translate}}
 
                     .form-line(*ngIf='platform.isShellIntegrationSupported()')
                         .header

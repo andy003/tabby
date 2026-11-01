@@ -1,7 +1,2 @@
-sftp-panel {
-    position: absolute;
-    height: 80%;
-    width: 100%;
-    bottom: 0;
-    z-index: 5;
-}
+// Contextual file browsing is rendered in the shared workspace sidebar.
+:host { min-width: 0; }

@@ -17,7 +17,7 @@ ul.nav-tabs(ngbNav, #nav='ngbNav')
                             *ngIf='hostApp.platform !== Platform.Web',
                             (click)='connectionMode = "proxyCommand"',
                         )
-                            div Proxy command
+                            div(translate) Proxy command
                             .text-muted(translate) Command's stdin/stdout is used instead of a network connection
                         button.dropdown-item(
                             (click)='connectionMode = "jumpHost"',
@@ -100,7 +100,7 @@ ul.nav-tabs(ngbNav, #nav='ngbNav')
                 label(translate) Username
                 input.form-control(
                     type='text',
-                    placeholder='Ask every time',
+                    [placeholder]='"Ask every time"|translate',
                     [(ngModel)]='profile.options.user',
                 )
 
@@ -225,7 +225,7 @@ ul.nav-tabs(ngbNav, #nav='ngbNav')
             .form-line
                 .header
                     .title(translate) Reuse session for multiple tabs
-                    .description Multiplex multiple shells through the same connection
+                    .description(translate) Multiplex multiple shells through the same connection
                 toggle([(ngModel)]='profile.options.reuseSession')
 
             .form-line
@@ -304,7 +304,7 @@ ul.nav-tabs(ngbNav, #nav='ngbNav')
 
             .form-line.align-items-start
                 .header
-                    .title Compression
+                    .title(translate) Compression
                 .w-75
                     div(*ngFor='let alg of supportedAlgorithms.compression')
                         checkbox([text]='alg', [(ngModel)]='algorithms.compression[alg]')

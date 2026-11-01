@@ -1,4 +1,5 @@
 import { Injectable, Pipe, PipeTransform } from '@angular/core'
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker'
 import { formatDate, registerLocaleData } from '@angular/common'
 import { TranslateService, MissingTranslationHandler } from '@ngx-translate/core'
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler'
@@ -55,9 +56,11 @@ registerLocaleData(localeZH)
 
 function flattenMessageFormatTranslation (po: any) {
     const translation = {}
-    po = po.translations['']
-    for (const k of Object.keys(po)) {
-        translation[k] = po[k].msgstr[0] || k
+    for (const context of Object.keys(po.translations)) {
+        const messages = po.translations[context]
+        for (const k of Object.keys(messages)) {
+            translation[k] ??= messages[k].msgstr[0] || k
+        }
     }
     return translation
 }
@@ -79,102 +82,102 @@ export class CustomMissingTranslationHandler extends MissingTranslationHandler {
 export class LocaleService {
     private logger: Logger
 
-    static allLanguages = [
+    static allLanguages: { code: string, name: string }[] = [
         {
             code: 'af-ZA',
-            name: 'Afrikaans',
+            name: _('Afrikaans'),
         },
         {
             code: 'id-ID',
-            name: 'Bahasa Indonesia',
+            name: _('Bahasa Indonesia'),
         },
         {
             code: 'cs-CZ',
-            name: 'Čeština',
+            name: _('Čeština'),
         },
         {
             code: 'da-DK',
-            name: 'Dansk',
+            name: _('Dansk'),
         },
         {
             code: 'de-DE',
-            name: 'Deutsch',
+            name: _('Deutsch'),
         },
         {
             code: 'en-GB',
-            name: 'English (UK)',
+            name: _('English (UK)'),
         },
         {
             code: 'en-US',
-            name: 'English (US)',
+            name: _('English (US)'),
         },
         {
             code: 'es-ES',
-            name: 'Español',
+            name: _('Español'),
         },
         {
             code: 'fr-FR',
-            name: 'Français',
+            name: _('Français'),
         },
         {
             code: 'hr-HR',
-            name: 'Hrvatski',
+            name: _('Hrvatski'),
         },
         {
             code: 'it-IT',
-            name: 'Italiano',
+            name: _('Italiano'),
         },
         {
             code: 'pl-PL',
-            name: 'Polski',
+            name: _('Polski'),
         },
         {
             code: 'pt-PT',
-            name: 'Português',
+            name: _('Português'),
         },
         {
             code: 'pt-BR',
-            name: 'Português do Brasil',
+            name: _('Português do Brasil'),
         },
         {
             code: 'sv-SE',
-            name: 'Svenska',
+            name: _('Svenska'),
         },
         {
             code: 'tr-TR',
-            name: 'Türkçe',
+            name: _('Türkçe'),
         },
         {
             code: 'bg-BG',
-            name: 'Български',
+            name: _('Български'),
         },
         {
             code: 'ru-RU',
-            name: 'Русский',
+            name: _('Русский'),
         },
         {
             code: 'sr-SP',
-            name: 'Српски',
+            name: _('Српски'),
         },
         {
             code: 'uk-UA',
-            name: 'Українська',
+            name: _('Українська'),
         },
         {
             code: 'ja-JP',
-            name: '日本語',
+            name: _('日本語'),
         },
         {
             code: 'ko-KR',
-            name: '한국어',
+            name: _('한국어'),
         },
         {
             code: 'zh-CN',
-            name: '中文（简体）',
+            name: _('中文（简体）'),
         },
         {
             code: 'zh-TW',
-            name: '中文 (繁體)',
+            name: _('中文 (繁體)'),
         },
     ]
 
@@ -182,7 +185,7 @@ export class LocaleService {
         return this.localeChanged.pipe(distinctUntilChanged())
     }
 
-    private locale = 'en-US'
+    private locale = 'zh-CN'
     private localeChanged = new Subject<string>()
 
     constructor (
@@ -201,8 +204,8 @@ export class LocaleService {
 
         const d = new Date()
         if (d.getMonth() === 3 && d.getDate() === 1) {
-            LocaleService.allLanguages.find(x => x.code === 'en-US')!.name = 'English (simplified)'
-            LocaleService.allLanguages.find(x => x.code === 'en-GB')!.name = 'English (traditional)'
+            LocaleService.allLanguages.find(x => x.code === 'en-US')!.name = _('English (simplified)')
+            LocaleService.allLanguages.find(x => x.code === 'en-GB')!.name = _('English (traditional)')
         }
     }
 
@@ -225,15 +228,7 @@ export class LocaleService {
     }
 
     refresh (): void {
-        let lang = this.config.store.language
-        if (!lang) {
-            for (const systemLanguage of navigator.languages) {
-                if (!lang && LocaleService.allLanguages.some(x => x.code === systemLanguage)) {
-                    lang = systemLanguage
-                }
-            }
-        }
-        lang ??= 'en-US'
+        const lang = this.config.store.language ?? 'zh-CN'
         this.setLocale(lang)
     }
 

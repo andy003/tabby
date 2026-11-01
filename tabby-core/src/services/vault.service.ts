@@ -9,6 +9,7 @@ import { NotificationsService } from './notifications.service'
 import { SelectorService } from './selector.service'
 import { FileProvider } from '../api/fileProvider'
 import { PlatformService } from '../api/platform'
+import { TranslateService } from '@ngx-translate/core'
 
 const PBKDF_ITERATIONS = 100000
 const PBKDF_DIGEST = 'sha512'
@@ -273,6 +274,7 @@ export class VaultFileProvider extends FileProvider {
         private platform: PlatformService,
         private selector: SelectorService,
         private zone: NgZone,
+        private translate: TranslateService,
     ) {
         super()
     }
@@ -288,9 +290,9 @@ export class VaultFileProvider extends FileProvider {
         }
         const files = vault.secrets.filter(x => x.type === VAULT_SECRET_TYPE_FILE) as VaultFileSecret[]
         if (files.length) {
-            const result = await this.selector.show<VaultFileSecret|null>('Select file', [
+            const result = await this.selector.show<VaultFileSecret|null>(this.translate.instant('Select file'), [
                 {
-                    name: 'Add a new file',
+                    name: this.translate.instant('Add a new file'),
                     icon: 'fas fa-plus',
                     result: null,
                 },

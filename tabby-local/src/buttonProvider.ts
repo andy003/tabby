@@ -16,6 +16,7 @@ export class ButtonProvider extends ToolbarButtonProvider {
     provide (): ToolbarButton[] {
         return [
             {
+                id: 'local:new-tab',
                 icon: require('./icons/plus.svg'),
                 title: this.translate.instant('New terminal'),
                 touchBarNSImage: 'NSTouchBarAddDetailTemplate',

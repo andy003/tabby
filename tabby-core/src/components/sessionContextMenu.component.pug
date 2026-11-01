@@ -1,0 +1,8 @@
+.session-menu(*ngIf='visible', #menu, role='menu', [attr.aria-label]='title || ("Sessions"|translate)', [style.left.px]='x', [style.top.px]='y', (keydown)='onKeyDown($event)', (contextmenu)='$event.preventDefault(); $event.stopPropagation()')
+    .menu-heading(*ngIf='title', role='presentation')
+        span {{title}}
+    ng-container(*ngFor='let item of items')
+        .menu-separator(*ngIf='item.type == "separator"', role='separator')
+        button.menu-action(*ngIf='item.type != "separator"', type='button', role='menuitem', tabindex='-1', (click)='run(item)')
+            i([class]='item.icon || ""', aria-hidden='true')
+            span {{item.label}}

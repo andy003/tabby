@@ -7,6 +7,12 @@ import { SFTPPanelComponent } from '../components/sftpPanel.component'
  */
 export abstract class SFTPContextMenuItemProvider {
     weight = 0
+    supportsEditing = false
 
     abstract getItems (item: SFTPFile, panel: SFTPPanelComponent): Promise<MenuItemOptions[]>
+
+    /** Open a file in a local editor, when this provider supports editing. */
+    async editFile (_item: SFTPFile, _panel: SFTPPanelComponent): Promise<boolean> {
+        return false
+    }
 }

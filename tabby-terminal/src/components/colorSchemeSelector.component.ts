@@ -2,8 +2,9 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker'
 
 import { Component, Inject, Input, ChangeDetectionStrategy, ChangeDetectorRef, HostBinding, Output, EventEmitter } from '@angular/core'
-import { ConfigService, TerminalColorScheme } from 'tabby-core'
+import { ConfigService, TerminalColorScheme, TranslateService } from 'tabby-core'
 import { TerminalColorSchemeProvider } from '../api/colorSchemeProvider'
+import { colorSchemeDisplayName } from '../colorSchemes'
 
 _('Search color schemes')
 
@@ -33,6 +34,7 @@ export class ColorSchemeSelectorComponent {
         @Inject(TerminalColorSchemeProvider) private colorSchemeProviders: TerminalColorSchemeProvider[],
         private changeDetector: ChangeDetectorRef,
         public config: ConfigService,
+        private translate: TranslateService,
     ) { }
 
     async ngOnInit () {
@@ -42,6 +44,10 @@ export class ColorSchemeSelectorComponent {
 
         this.allColorSchemes = customColorSchemes.concat(stockColorSchemes)
         this.changeDetector.markForCheck()
+    }
+
+    schemeDisplayName (name: string): string {
+        return colorSchemeDisplayName(name, this.translate)
     }
 
     selectScheme (scheme: TerminalColorScheme|undefined) {

@@ -40,3 +40,6 @@ export { LocaleService, TabbyFormatedDatePipe } from '../services/locale.service
 export { TranslateService } from '@ngx-translate/core'
 export * from '../utils'
 export { UTF8Splitter } from '../utfSplitter'
+export { FileSyncService, FileSyncEntry, FileSyncState } from '../services/fileSync.service'
+export { FileTransferState, TransferTask } from './platform'
+export { TransferJob, TransferSummary, runTransferJobs, getTransferSummary, failTransferTree } from '../transferQueue'

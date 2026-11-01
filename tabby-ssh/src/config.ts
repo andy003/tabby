@@ -5,6 +5,9 @@ export class SSHConfigProvider extends ConfigProvider {
     defaults = {
         ssh: {
             warnOnClose: false,
+            autoOpenSFTP: true,
+            fileEditor: 'system',
+            fileEditorPath: '',
             winSCPPath: null,
             agentType: 'auto',
             agentPath: null,

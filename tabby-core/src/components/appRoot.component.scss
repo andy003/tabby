@@ -224,3 +224,126 @@ hotkey-hint {
     text-align: center;
     font-weight: bold;
 }
+
+// The workbench chrome stays light independently of the terminal color scheme.
+:host {
+    --tabs-height: 40px;
+    background: var(--workspace-bg);
+    animation: none;
+    font-family: var(--workspace-font);
+}
+
+.window { flex: 1 1 0; min-height: 0; height: auto !important; }
+
+.workspace-main {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+}
+
+.main.content > .tab-bar {
+    background: var(--workspace-chrome);
+    border-bottom: 1px solid var(--workspace-border);
+    gap: 4px;
+    padding: 4px 6px 0;
+
+    > .tabs {
+        overflow: auto hidden;
+        scrollbar-width: thin;
+        &::-webkit-scrollbar { height: 3px; }
+    }
+    > .btn-space, > .btn-space.persistent { min-width: 12px; }
+    .background { background: transparent; }
+    .btn-tab-bar { height: 28px; padding: 0 8px; color: var(--workspace-muted); border-radius: 4px; }
+    .btn-tab-bar.selected { background: var(--workspace-selected); color: var(--workspace-accent); }
+    .btn-tab-bar ::ng-deep svg path { fill: currentColor; }
+}
+
+.home-tab, .new-tab {
+    flex: none;
+    border: 1px solid transparent;
+    color: var(--workspace-muted);
+    background: transparent;
+    width: 36px;
+    height: 35px;
+    padding: 0;
+    border-radius: 6px 6px 0 0;
+    font-size: 13px;
+    &:hover { background: #ffffff80; color: var(--workspace-accent); }
+    &.active { background: var(--workspace-surface); color: var(--workspace-accent); box-shadow: inset 0 2px var(--workspace-accent); }
+    &:focus-visible { outline: 2px solid var(--workspace-accent); outline-offset: -2px; }
+}
+.new-tab { width: 28px; height: 28px; margin: 3px 4px 0; border-radius: 5px; }
+
+.main.content > .tab-bar ::ng-deep tab-header {
+    color: var(--workspace-muted);
+    font: 13px var(--workspace-font);
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    background: transparent;
+    margin: 0 1px;
+    min-width: 160px;
+    .index { color: var(--workspace-muted); background: var(--workspace-chrome); opacity: 1; font-size: 10px; font-weight: 500; }
+    .current-tab-indicator { display: none; }
+    button { color: var(--workspace-muted); }
+    button:hover, button:active { background: var(--workspace-selected) !important; color: var(--workspace-accent); }
+    button.tab-close:hover { background: #fce9ec !important; color: #c63d4d; }
+    .activity-indicator { background: var(--workspace-accent); opacity: .65; height: 3px; border-radius: 2px; }
+    &:hover, &:focus-within { background: #ffffffb3; color: var(--workspace-text); }
+    &.active {
+        background: var(--workspace-surface);
+        color: var(--workspace-text);
+        border-color: var(--workspace-border);
+        box-shadow: inset 0 2px var(--workspace-accent);
+        .index { color: var(--workspace-accent); background: var(--workspace-selected); }
+        .name { font-weight: 500; }
+    }
+}
+
+.main.content.tabs-on-left > .tab-bar, .main.content.tabs-on-right > .tab-bar {
+    padding: 4px;
+    border-bottom: none;
+    .tabs { width: 100%; overflow: visible; }
+    .home-tab, .new-tab { margin: 2px auto; }
+    ::ng-deep tab-header {
+        width: 100% !important;
+        min-width: 0;
+        margin: 2px 0;
+        border: 1px solid transparent;
+        border-radius: 5px;
+        &.active { box-shadow: inset 2px 0 var(--workspace-accent); }
+    }
+}
+
+.main.content:not(.tabs-on-top) > .tab-bar {
+    padding: 0 6px 4px;
+    border-top: 1px solid var(--workspace-border);
+    border-bottom: none;
+    .home-tab, ::ng-deep tab-header {
+        border-radius: 0 0 6px 6px;
+        &.active { box-shadow: inset 0 -2px var(--workspace-accent); }
+    }
+    ::ng-deep tab-header { border-top: none; border-bottom: 1px solid transparent; }
+}
+
+.workspace-status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex: 0 0 27px;
+    padding: 0 12px;
+    border-top: 1px solid var(--workspace-border);
+    color: var(--workspace-muted);
+    background: var(--workspace-surface);
+    font: 11px var(--workspace-font);
+    white-space: nowrap;
+    min-width: 0;
+    .status-title { overflow: hidden; text-overflow: ellipsis; max-width: 45%; }
+    .status-divider { width: 1px; height: 11px; background: var(--workspace-border); }
+    .status-spacer { flex: 1; }
+    > i { color: #4b927c; }
+    .status-transfers { padding: 0; border: 0; background: transparent; color: inherit; font: inherit; &:hover { color: var(--workspace-accent); } }
+}

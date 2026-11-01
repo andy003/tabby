@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Observable, OperatorFunction, debounceTime, map, distinctUntilChanged } from 'rxjs'
 import { Component, Input, ViewChild, ViewContainerRef, ComponentFactoryResolver, Injector } from '@angular/core'
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap'
-import { PartialProfileGroup, Profile, ProfileProvider, ProfileSettingsComponent, ProfilesService, TAB_COLORS, ProfileGroup, ConnectableProfileProvider, FullyDefined, ConfigProxy } from 'tabby-core'
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
+import { PartialProfileGroup, Profile, ProfileProvider, ProfileSettingsComponent, ProfilesService, TAB_COLORS, ProfileGroup, ConnectableProfileProvider, FullyDefined, ConfigProxy, ConfigService, NotificationsService, TranslateService } from 'tabby-core'
+import { EditProfileGroupModalComponent, EditProfileGroupModalComponentResult } from './editProfileGroupModal.component'
 
 const iconsData = require('../../../tabby-core/src/icons.json')
 const iconsClassList = Object.keys(iconsData).map(
@@ -21,7 +22,9 @@ export class EditProfileModalComponent<P extends Profile, PP extends ProfileProv
     @Input() settingsComponent: new () => ProfileSettingsComponent<P, PP>
     @Input() defaultsMode: 'enabled'|'group'|'disabled' = 'disabled'
     @Input() profileGroup: PartialProfileGroup<ProfileGroup> | undefined
-    groups: PartialProfileGroup<ProfileGroup>[]
+    groups: PartialProfileGroup<ProfileGroup>[] = []
+    loadingGroups = true
+    creatingGroup = false
     @ViewChild('placeholder', { read: ViewContainerRef }) placeholder: ViewContainerRef
 
     protected profile: FullyDefined<P> & ConfigProxy<FullyDefined<P>>
@@ -32,14 +35,11 @@ export class EditProfileModalComponent<P extends Profile, PP extends ProfileProv
         private componentFactoryResolver: ComponentFactoryResolver,
         private profilesService: ProfilesService,
         private modalInstance: NgbActiveModal,
-    ) {
-        if (this.defaultsMode === 'disabled') {
-            this.profilesService.getProfileGroups().then(groups => {
-                this.groups = groups
-                this.profileGroup = groups.find(g => g.id === this.partialProfile.group)
-            })
-        }
-    }
+        private modal: NgbModal,
+        private config: ConfigService,
+        private notifications: NotificationsService,
+        private translate: TranslateService,
+    ) { }
 
     colorsAutocomplete = text$ => text$.pipe(
         debounceTime(200),
@@ -55,8 +55,13 @@ export class EditProfileModalComponent<P extends Profile, PP extends ProfileProv
         return TAB_COLORS.find(x => x.value === value)?.name ?? value
     }
 
-    ngOnInit () {
+    async ngOnInit (): Promise<void> {
         this.profile = this.profilesService.getConfigProxyForProfile<P>(this.partialProfile, { skipGlobalDefaults: this.defaultsMode === 'enabled', skipGroupDefaults: this.defaultsMode === 'group' })
+        if (this.defaultsMode === 'disabled') {
+            this.groups = await this.profilesService.getProfileGroups()
+            this.profileGroup = this.groups.find(g => g.id === this.partialProfile.group)
+        }
+        this.loadingGroups = false
     }
 
     ngAfterViewInit () {
@@ -72,14 +77,39 @@ export class EditProfileModalComponent<P extends Profile, PP extends ProfileProv
         }
     }
 
-    groupTypeahead: OperatorFunction<string, readonly PartialProfileGroup<ProfileGroup>[]> = (text$: Observable<string>) =>
-        text$.pipe(
-            debounceTime(200),
-            distinctUntilChanged(),
-            map(q => this.groups.filter(g => !q || g.name.toLowerCase().includes(q.toLowerCase()))),
-        )
+    groupLabel (group: PartialProfileGroup<ProfileGroup>): string {
+        return this.profilesService.resolveProfileGroupPath(group.id).join(' / ')
+    }
 
-    groupFormatter = (g: PartialProfileGroup<ProfileGroup>) => g.name
+    selectGroup (groupId: string): void {
+        this.profileGroup = this.groups.find(g => g.id === groupId)
+        this.profile.group = this.profileGroup?.id ?? ''
+        this.profilesService.refreshConfigProxyForProfile<P>(this.profile)
+    }
+
+    async newGroup (): Promise<void> {
+        if (this.loadingGroups || this.creatingGroup) { return }
+        this.creatingGroup = true
+        try {
+            const dialog = this.modal.open(EditProfileGroupModalComponent, { size: 'lg' })
+            dialog.componentInstance.group = { id: 'new', name: '', icon: 'far fa-folder' }
+            dialog.componentInstance.providers = []
+            const result: EditProfileGroupModalComponentResult<ProfileGroup>|null = await dialog.result.catch(() => null)
+            if (!result) { return }
+            try {
+                await this.config.save()
+            } catch (error) {
+                // The group editor inserts the new group before returning it.
+                this.config.store.groups = this.config.store.groups.filter(g => g.id !== result.group.id)
+                this.notifications.error(this.translate.instant('Could not create group'), error instanceof Error ? error.message : String(error))
+                return
+            }
+            this.groups = await this.profilesService.getProfileGroups()
+            this.selectGroup(result.group.id)
+        } finally {
+            this.creatingGroup = false
+        }
+    }
 
     iconSearch: OperatorFunction<string, string[]> = (text$: Observable<string>) =>
         text$.pipe(
@@ -88,10 +118,9 @@ export class EditProfileModalComponent<P extends Profile, PP extends ProfileProv
         )
 
     save () {
-        if (!this.profileGroup) {
-            this.profile.group = ''
-        } else {
-            this.profile.group = this.profileGroup.id
+        if (this.loadingGroups || this.creatingGroup) { return }
+        if (this.defaultsMode === 'disabled') {
+            this.profile.group = this.profileGroup?.id ?? ''
         }
 
         this.settingsComponentInstance?.save?.()

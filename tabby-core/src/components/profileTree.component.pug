@@ -1,49 +1,87 @@
-.p-2.h-100.d-flex.flex-column
-    input.form-control.form-control-sm.mb-1(
-        type='text',
-        [(ngModel)]='filter',
-        [placeholder]='"Filter"|translate',
-        (ngModelChange)='onFilterChange()'
-    )
-
-    .profile-tree.h-100
-        .d-flex.flex-column.p-2.profile-tree-container
-
-            ng-container(*ngFor='let group of rootGroups')
-                ng-container(*ngTemplateOutlet='recursiveGroup; context: {$implicit: group, depth: 0}')
-
-            ng-template(#recursiveGroup let-group let-depth='depth')
-                a.tree-item(
-                    (click)='toggleGroupCollapse(group)',
-                    [style.paddingLeft.px]='depth * 20',
-                    (contextmenu)='groupContextMenu(group, $event)',
-                    href='#'
-                )
-                    .fw-20
-                        .fa.fa-fw.fas.fa-chevron-right.ms-1.text-muted(*ngIf='group.collapsed')
-                        .fa.fa-fw.fas.fa-chevron-down.ms-1.text-muted(*ngIf='!group.collapsed')
-                    .fw-20
-                        profile-icon.ms-1([icon]='group.icon ?? "far fa-folder"', [color]='group?.color')
-                    span.ms-2.me-auto {{ group.name || ("Ungrouped"|translate) }}
-
-                ng-container(*ngIf='!group.collapsed')
-                    ng-container(*ngFor='let profile of group.profiles')
-                        a.tree-item(
-                            (dblclick)='launchProfile(profile)',
-                            [style.paddingLeft.px]='(depth + 1) * 20',
-                            (contextmenu)='profileContextMenu(profile, $event)',
-                            href='#'
+.sidebar-shell((contextmenu)='page != "files" && treeContextMenu($event)')
+    form.quick-connect((ngSubmit)='quickConnect()')
+        input(type='text', name='quickConnect', [(ngModel)]='quickConnectQuery', [placeholder]='"Quick connect…"|translate', [attr.aria-label]='"Quick connect: user@host or protocol://host"|translate', [disabled]='connecting')
+        button(type='submit', [disabled]='connecting || !quickConnectQuery.trim()', [attr.aria-label]='"Connect"|translate', [ngbTooltip]='"Connect"|translate')
+            i.fas([class.fa-arrow-right]='!connecting', [class.fa-spinner]='connecting', [class.fa-spin]='connecting')
+    .sidebar-body
+        .sidebar-rail(role='tablist', [attr.aria-label]='"Session navigation"|translate')
+            button.collapse-button(type='button', (click)='toggleSidebar()', [ngbTooltip]='"Hide sidebar"|translate', [attr.aria-label]='"Hide sidebar"|translate')
+                i.fas.fa-angles-left
+            button(type='button', role='tab', [class.active]='page == "sessions"', [attr.aria-selected]='page == "sessions"', (click)='selectPage("sessions")')
+                i.fas.fa-star
+                span(translate) Sessions
+            button(type='button', role='tab', [class.active]='page == "recent"', [attr.aria-selected]='page == "recent"', (click)='selectPage("recent")')
+                i.fas.fa-clock-rotate-left
+                span(translate) Recent
+            button(type='button', role='tab', [class.active]='page == "open"', [attr.aria-selected]='page == "open"', (click)='selectPage("open")')
+                i.fas.fa-display
+                span(translate) Open tabs
+            button(type='button', role='tab', *ngIf='contentTemplate', [class.active]='page == "files"', [attr.aria-selected]='page == "files"', (click)='selectPage("files")')
+                i.fas.fa-folder-open
+                span(translate) SFTP
+        .sidebar-panel
+            .panel-heading
+                i.fas.fa-folder-tree
+                strong {{ (page == 'sessions' ? 'User sessions' : page == 'recent' ? 'Recent sessions' : page == 'files' ? 'SFTP browser' : 'Open tabs')|translate }}
+                button(type='button', *ngIf='page != "files"', (click)='commands.run("settings:profiles", {})', [attr.aria-label]='"Manage sessions"|translate', [ngbTooltip]='"Manage sessions"|translate')
+                    i.fas.fa-gear
+            .session-filter(*ngIf='page == "sessions"')
+                i.fas.fa-magnifying-glass
+                input(type='search', [(ngModel)]='filter', [placeholder]='"Filter sessions"|translate', [attr.aria-label]='"Filter sessions"|translate', (ngModelChange)='onFilterChange()')
+            .file-browser(*ngIf='page == "files" && contentTemplate')
+                ng-container(*ngTemplateOutlet='contentTemplate')
+            .profile-tree(role='tabpanel', *ngIf='page != "files"')
+                .profile-tree-container(*ngIf='page == "sessions"')
+                    ng-container(*ngFor='let group of rootGroups')
+                        ng-container(*ngTemplateOutlet='recursiveGroup; context: {$implicit: group, depth: 0}')
+                    .sidebar-empty(*ngIf='rootGroups.length == 0', translate) No sessions found
+                    .filtered-drop-groups(*ngIf='draggedProfileId && filter.trim()')
+                        .drop-groups-heading(translate) Move to group
+                        button.tree-item.group(
+                            type='button',
+                            *ngFor='let group of filteredDropGroups',
+                            [class.drop-target]='dropTargetId == group.id',
+                            [class.unavailable]='!canDropProfile(group)',
+                            (dragover)='onGroupDragOver(group, $event)',
+                            (dragleave)='onGroupDragLeave($event)',
+                            (drop)='onProfileDrop(group, $event)'
                         )
-                            .fw-20
-                                profile-icon.ms-1([icon]='profile.icon', [color]='profile.color')
-                            span.ms-2.no-wrap {{ profile.name }}
+                            profile-icon.folder-icon([icon]='group.icon || "fas fa-folder"', [color]='group.color')
+                            span.no-wrap {{dropGroupName(group)}}
+                .profile-tree-container(*ngIf='page == "recent"')
+                    button.tree-item(type='button', *ngFor='let profile of recentProfiles', (dblclick)='launchProfile(profile)', (keydown.enter)='launchProfile(profile)', (contextmenu)='profileContextMenu(profile, $event)')
+                        i.fas.fa-clock-rotate-left.tree-history
+                        span.no-wrap {{profile.name}}
+                        i.fas.fa-play.launch-icon((click)='launchProfile(profile); $event.stopPropagation()')
+                    .sidebar-empty(*ngIf='recentProfiles.length == 0', translate) No recent sessions
+                .profile-tree-container(*ngIf='page == "open"')
+                    button.tree-item(type='button', *ngFor='let tab of app.tabs', (click)='app.selectTab(tab)', [class.selected]='tab == app.activeTab')
+                        i.fas.fa-terminal
+                        span.no-wrap {{tab.customTitle || tab.title}}
+                    .sidebar-empty(*ngIf='app.tabs.length == 0', translate) No open tabs
+            .sidebar-footer
+                button(type='button', (click)='commands.run("settings:new-profile", {})')
+                    i.fas.fa-plus
+                    span(translate) New session
+                button.new-group(type='button', (click)='newGroup()', [ngbTooltip]='"New group"|translate')
+                    i.fas.fa-folder-plus
+                    span(translate) New group
+                button(type='button', (click)='commands.run("settings:profiles", {})', [ngbTooltip]='"Manage sessions"|translate', [attr.aria-label]='"Manage sessions"|translate')
+                    i.fas.fa-sliders
 
-                            .actions
-                                .action((click)='launchProfile(profile)')
-                                    .fa.fa-fw.fas.fa-play
-
-                    ng-container(*ngFor='let child of group.children')
-                        ng-container(*ngTemplateOutlet='recursiveGroup; context: {$implicit: child, depth: depth + 1}')
-.grabber(
-    (mousedown)="startResize($event)"
-)
+ng-template(#recursiveGroup let-group let-depth='depth')
+    .profile-group([class.drop-target]='dropTargetId == group.id', (dragover)='onGroupDragOver(group, $event)', (dragleave)='onGroupDragLeave($event)', (drop)='onProfileDrop(group, $event)')
+        button.tree-item.group(type='button', (click)='toggleGroupCollapse(group)', [style.paddingLeft.px]='depth * 16 + 5', (contextmenu)='groupContextMenu(group, $event)', [attr.aria-expanded]='!group.collapsed')
+            i.fas.chevron([class.fa-square-plus]='group.collapsed', [class.fa-square-minus]='!group.collapsed')
+            profile-icon.folder-icon([icon]='group.icon || "fas fa-folder"', [color]='group.color')
+            span.no-wrap {{ group.name || ('Ungrouped'|translate) }}
+        .group-drop-hint(*ngIf='draggedProfileId && canDropProfile(group) && !group.collapsed && !group.profiles?.length && !group.children?.length', translate) Drop session here
+        ng-container(*ngIf='!group.collapsed')
+            button.tree-item.profile(type='button', *ngFor='let profile of group.profiles', (dblclick)='launchProfile(profile)', (keydown.enter)='launchProfile(profile)', [style.paddingLeft.px]='(depth + 1) * 16 + 5', (contextmenu)='profileContextMenu(profile, $event)', [attr.draggable]='canDragProfile(profile)', (dragstart)='onProfileDragStart(profile, $event)', (dragend)='onProfileDragEnd()', [class.dragging]='profile.id == draggedProfileId', [class.selected]='profile.id == activeProfileId', [attr.title]='profile.name')
+                profile-icon([icon]='profile.icon || "fas fa-terminal"', [color]='profile.color')
+                span.no-wrap {{profile.name}}
+                i.fas.fa-play.launch-icon((click)='launchProfile(profile); $event.stopPropagation()')
+            ng-container(*ngFor='let child of group.children')
+                ng-container(*ngTemplateOutlet='recursiveGroup; context: {$implicit: child, depth: depth + 1}')
+.grabber((mousedown)='startResize($event)', [class.resizing]='panelIsResizing')
+session-context-menu

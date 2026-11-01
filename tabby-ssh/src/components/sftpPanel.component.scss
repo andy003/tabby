@@ -1,61 +1,93 @@
 :host {
     display: flex;
     flex-direction: column;
+    min-height: 0;
+    background: var(--workspace-surface);
+    color: var(--workspace-text);
+    font: 12px/1.5 var(--workspace-font);
+    --bs-body-color: var(--workspace-text);
+    --theme-fg: var(--workspace-text);
+    --theme-bg-more: var(--workspace-subtle);
+    --bs-list-group-action-color: var(--workspace-text);
+    --bs-list-group-action-hover-color: var(--workspace-accent);
+    --bs-list-group-action-hover-bg: var(--workspace-hover);
 
     > .header {
-        padding: 5px 15px 0 20px;
         display: flex;
         align-items: center;
         flex: none;
-    }
+        padding: 5px 4px;
+        gap: 1px;
+        background: var(--workspace-subtle);
+        border-bottom: 1px solid var(--workspace-border);
 
-    > .filter-bar {
-        flex: none;
-    }
-
-    > .body {
-        padding: 10px 20px;
-        flex: 1 1 0;
-        overflow-y: auto;
-    }
-
-    .breadcrumb {
-        background: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .breadcrumb-item {
-        cursor: pointer;
-    }
-
-    .breadcrumb-item:first-child {
-        font-weight: bold;
-    }
-
-    .list-group-item-action {
-        &:hover {
-            background: rgba(white, .05);
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 25px;
+            height: 29px;
+            padding: 0;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: var(--workspace-muted);
+            font-size: 12px;
+            div { display: none; }
+            i { margin: 0 !important; }
+            svg { width: 11px; height: 11px; fill: currentColor; }
+            &:hover { background: var(--workspace-selected); border-color: #d6e3fa; color: var(--workspace-accent); }
+            &:focus-visible { outline: 2px solid var(--workspace-accent); outline-offset: -2px; box-shadow: none; }
+            &:last-child { margin-left: auto; }
         }
     }
+    > .path-bar {
+        flex: none;
+        padding: 8px;
+        background: var(--workspace-surface);
+        border-bottom: 1px solid var(--workspace-border);
 
-    .mode, .size, .date {
-        font-family: monospace;
-        opacity: .5;
+        .input-group { border: 1px solid var(--workspace-border-strong); border-radius: 5px; overflow: hidden; }
+        .input-group:focus-within { border-color: var(--workspace-accent); box-shadow: var(--workspace-focus); }
+        .form-control { min-width: 0; font: 11px/1.5 'Source Code Pro', monospace; padding: 6px 3px; border: 0; box-shadow: none; }
+        .path-icon { color: #7d91ad; background: transparent; padding: 0 7px; border: 0; font-size: 12px; }
+        .btn { padding: 4px 9px; background: var(--workspace-subtle); border: 0; border-left: 1px solid var(--workspace-border); color: var(--workspace-muted); border-radius: 0; font-size: 11px; }
+        .btn:hover { background: var(--workspace-selected); color: var(--workspace-accent); }
+    }
+    > .filter-bar { flex: none; background: var(--workspace-subtle); border-color: var(--workspace-border) !important; }
+    > .body { padding: 5px; flex: 1 1 0; overflow-y: auto; }
+    .list-group { --bs-list-group-bg: transparent; }
+    .list-group-item {
+        min-height: 32px;
+        padding: 6px 7px;
+        margin-bottom: 1px;
+        border: 1px solid transparent;
+        border-radius: 4px;
         font-size: 12px;
-        text-align: right;
-        margin-left: 20px;
+        color: var(--workspace-text);
+        &:hover { background: var(--workspace-hover); color: var(--workspace-accent); }
+        &.selected { background: var(--workspace-selected); color: var(--workspace-accent); }
+        &:focus-visible { outline: 2px solid var(--workspace-accent); outline-offset: -2px; }
+        > i { flex: none; margin-right: 7px; color: #7c91ac; font-size: 13px; }
+        > i.fa-folder { color: #bc9955 !important; }
+        .file-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     }
-
-    .size {
-        width: 100px;
-    }
-
-    .date {
-        width: 200px;
-    }
-}
-
-.btn-link svg {
-    width: 12px;
+    .size { margin-left: 8px; flex: none; font: 10px 'Source Code Pro', monospace; color: var(--workspace-muted); white-space: nowrap; }
+    .date, .mode { display: none; }
+    .form-control { background: var(--workspace-surface); border: 1px solid var(--workspace-border-strong); color: var(--workspace-text); font-size: 12px; }
+    .form-control:focus { border-color: var(--workspace-accent); box-shadow: var(--workspace-focus); }
+    .form-control:disabled { background: var(--workspace-subtle); color: var(--workspace-muted); }
+    .alert { font-size: 11px; padding: 10px; border-radius: 5px; line-height: 1.6; }
+    .alert-info { background: #f0f5ff; color: #426188; border: 1px solid #d9e5fa; a { color: var(--workspace-accent); } }
+    .alert-danger { background: #fff1f2; color: #a03346; border: 1px solid #f0cdd4; }
+    .body::-webkit-scrollbar-thumb { background: #c4cedb; border-radius: 8px; }
+    .file-sync-icon { flex: none; margin-left: 6px; font-size: 11px; }
+    [data-state='synced'] { color: #25826b; }
+    [data-state='error'] { color: #b13f50; }
+    [data-state='pending'], [data-state='disconnected'] { color: #a46a0c; }
+    [data-state='uploading'], [data-state='downloading'] { color: var(--workspace-accent); }
+    > .file-status { flex: none; padding: 9px 10px; border-top: 1px solid var(--workspace-border); background: var(--workspace-subtle); }
+    .selected-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; font-weight: 500; margin-bottom: 3px; }
+    .sync-state { display: flex; align-items: center; gap: 6px; font-size: 11px; button { margin-left: auto; border: 0; padding: 0 3px; background: transparent; color: inherit; } }
+    .sync-details { color: var(--workspace-muted); font-size: 10px; line-height: 1.6; }
+    .sync-error { color: #b13f50; overflow-wrap: anywhere; max-height: 70px; overflow-y: auto; }
 }

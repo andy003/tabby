@@ -11,6 +11,7 @@ import { SelectorService } from './selector.service'
 import deepClone from 'clone-deep'
 import { v4 as uuidv4 } from 'uuid'
 import slugify from 'slugify'
+import { moveProfileToGroup } from '../profileGrouping'
 
 @Injectable({ providedIn: 'root' })
 export class ProfilesService {
@@ -134,6 +135,11 @@ export class ProfilesService {
             }
             Object.assign(cProfile, profile)
         }
+    }
+
+    /** Move an existing user session to a saved group, or to Ungrouped (null). */
+    moveProfileToGroup (profileId: string, groupId: string|null): boolean {
+        return moveProfileToGroup(this.config.store.profiles, this.config.store.groups, profileId, groupId)
     }
 
     /**
@@ -469,7 +475,7 @@ export class ProfilesService {
                     if (!group) {
                         group = {
                             id: `${slugify(profile.group!)}`,
-                            name: `${profile.group!}`,
+                            name: this.translate.instant(profile.group!),
                             editable: false,
                             profiles: [],
                         }

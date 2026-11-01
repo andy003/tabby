@@ -5,6 +5,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker'
 import { Component, Inject, Input, ChangeDetectionStrategy, ChangeDetectorRef, HostBinding } from '@angular/core'
 import { ConfigService, PlatformService, TerminalColorScheme, TranslateService } from 'tabby-core'
 import { TerminalColorSchemeProvider } from '../api/colorSchemeProvider'
+import { colorSchemeDisplayName } from '../colorSchemes'
 
 _('Search color schemes')
 
@@ -102,8 +103,13 @@ export class ColorSchemeSettingsForModeComponent {
         }
     }
 
+    schemeDisplayName (name: string): string {
+        return colorSchemeDisplayName(name, this.translate)
+    }
+
     getCurrentSchemeName () {
-        return (this.currentCustomScheme ?? this.currentStockScheme)?.name ?? 'Custom'
+        const name = (this.currentCustomScheme ?? this.currentStockScheme)?.name
+        return name ? this.schemeDisplayName(name) : this.translate.instant('Custom')
     }
 
     findMatchingScheme (scheme: TerminalColorScheme, schemes: TerminalColorScheme[]) {

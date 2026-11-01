@@ -1,5 +1,6 @@
 .modal-header(*ngIf='defaultsMode === "disabled"')
-    h3.m-0 {{profile.name}}
+    h3.m-0 {{profile.name || ('Session settings'|translate)}}
+    span.badge.text-bg-secondary.ms-auto {{profileProvider.name|translate}}
 
 .modal-header(*ngIf='defaultsMode !== "disabled"')
     h3.m-0(
@@ -19,17 +20,24 @@
                 )
 
             .mb-3(*ngIf='defaultsMode === "disabled"')
-                label(translate) Group
-                input.form-control(
-                    type='text',
-                    alwaysVisibleTypeahead,
-                    placeholder='Ungrouped',
-                    [(ngModel)]='profileGroup',
-                    [ngbTypeahead]='groupTypeahead',
-                    [inputFormatter]="groupFormatter",
-			        [resultFormatter]="groupFormatter",
-			        [editable]="false"
-                )
+                label(for='session-profile-group', translate) Group
+                .input-group
+                    select.form-select(
+                        id='session-profile-group',
+                        [ngModel]='profileGroup?.id ?? ""',
+                        (ngModelChange)='selectGroup($event)',
+                        [disabled]='loadingGroups || creatingGroup'
+                    )
+                        option(ngValue='', translate) Ungrouped
+                        option(*ngFor='let group of groups', [ngValue]='group.id') {{groupLabel(group)}}
+                    button.btn.btn-secondary(
+                        type='button',
+                        (click)='newGroup()',
+                        [disabled]='loadingGroups || creatingGroup',
+                        [attr.aria-label]='"New group"|translate',
+                        [ngbTooltip]='"New group"|translate'
+                    )
+                        i.fas.fa-folder-plus(aria-hidden='true')
 
             .mb-3(*ngIf='defaultsMode === "disabled"')
                 label(translate) Icon
@@ -92,5 +100,5 @@
             ng-template(#placeholder)
 
 .modal-footer
-    button.btn.btn-primary((click)='save()', translate) Save
-    button.btn.btn-danger((click)='cancel()', translate) Cancel
+    button.btn.btn-primary((click)='save()', [disabled]='loadingGroups || creatingGroup', translate) Save
+    button.btn.btn-secondary((click)='cancel()', translate) Cancel

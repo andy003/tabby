@@ -1,5 +1,5 @@
 import { Observable, Subject, BehaviorSubject, distinctUntilChanged, filter, debounceTime } from 'rxjs'
-import { EmbeddedViewRef, Injector, ViewContainerRef, ViewRef } from '@angular/core'
+import { EmbeddedViewRef, Injector, ViewContainerRef, ViewRef, TemplateRef } from '@angular/core'
 import { RecoveryToken } from '../api/tabRecovery'
 import { BaseComponent } from './base.component'
 import { ConfigService } from '../services/config.service'
@@ -25,6 +25,20 @@ export abstract class BaseTabComponent extends BaseComponent {
      * Parent tab (usually a SplitTabComponent)
      */
     parent: BaseTabComponent|null = null
+
+    /** Optional contextual panel displayed in the workspace sidebar. */
+    getSidebarTemplate (): TemplateRef<unknown>|null { return null }
+
+    /** Close the contextual sidebar without affecting the session. */
+    closeSidebar (): void { /* Tabs without a contextual panel have nothing to close. */ }
+
+    /** Whether custom buttons can currently send text to this tab. */
+    // eslint-disable-next-line @typescript-eslint/class-literal-property-style
+    get canSendCustomInput (): boolean { return false }
+
+    /** Receive input from a custom button. Tabs that accept text override this. */
+    sendCustomInput (_text: string): void { /* Tabs without an input stream ignore text. */ }
+
 
     /**
      * Current tab title

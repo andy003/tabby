@@ -1,7 +1,7 @@
 .head
     .bg-dark.p-3.mb-4(*ngIf='model != undefined')
         .d-flex.align-items-center
-            span {{model.name}}
+            span {{schemeDisplayName(model.name)}}
             .me-auto
             a.btn-link((click)='selectScheme(undefined); $event.preventDefault()', href='#', translate) Clear
 
@@ -16,7 +16,7 @@
     .list-group.list-group-light.mb-3
         ng-container(*ngFor='let scheme of allColorSchemes')
             .list-group-item.list-group-item-action(
-                [hidden]='filter && !scheme.name.toLowerCase().includes(filter.toLowerCase())',
+                [hidden]='filter && !schemeDisplayName(scheme.name).toLowerCase().includes(filter.toLowerCase())',
                 (click)='selectScheme(scheme)'
             )
                 .d-flex.w-100.align-items-center
@@ -24,6 +24,6 @@
 
                     .ms-2
 
-                    .me-auto {{scheme.name}}
+                    .me-auto {{schemeDisplayName(scheme.name)}}
 
                 color-scheme-preview([scheme]='scheme')

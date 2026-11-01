@@ -114,7 +114,8 @@ export class SSHProfileSettingsComponent implements ProfileSettingsComponent<SSH
     }
 
     async addPrivateKey () {
-        const ref = await this.fileProviders.selectAndStoreFile(`private key for ${this.profile.name}`).catch(() => null)
+        const description = this.translate.instant('Private key for {name}', { name: this.profile.name })
+        const ref = await this.fileProviders.selectAndStoreFile(description).catch(() => null)
         if (ref) {
             this.profile.options.privateKeys = [
                 ...this.profile.options.privateKeys,

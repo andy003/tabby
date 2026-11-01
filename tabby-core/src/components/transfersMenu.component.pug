@@ -1,23 +1,82 @@
-.d-flex.align-items-center
-    .dropdown-header(translate) File transfers
-    button.btn.btn-link.ms-auto((click)='removeAll(); $event.stopPropagation()') !{require('../icons/times.svg')}
-.transfer(*ngFor='let transfer of transfers', (click)='showTransfer(transfer)')
-    .icon(*ngIf='isDownload(transfer)') !{require('../icons/download.svg')}
-    .icon(*ngIf='!isDownload(transfer)') !{require('../icons/upload.svg')}
-    .main
-        label.no-wrap([ngbTooltip]='transfer.getName()')
-            | {{transfer.getName()}}
-            span.ms-2.text-muted(*ngIf='transfer.getStatus()') ({{transfer.getStatus()}})
-        ngb-progressbar([type]='transfer.isComplete() ? "success" : transfer.isCancelled() ? "danger" : "info"', [value]='getProgress(transfer)')
-        .metadata
-            .size {{transfer.getSize()|filesize}}
-            .speed(*ngIf='transfer.getSpeed()') {{transfer.getSpeed()|filesize}}/s
-
-    button.btn.btn-link(
-        *ngIf='!transfer.isComplete()',
-        (click)='removeTransfer(transfer); $event.stopPropagation()'
-    ) !{require('../icons/times.svg')}
-    button.btn.btn-link(
-        *ngIf='transfer.isComplete()',
-        (click)='removeTransfer(transfer); $event.stopPropagation()'
-    ) !{require('../icons/check.svg')}
+.transfer-resizer(
+    role='separator',
+    tabindex='0',
+    aria-orientation='horizontal',
+    [attr.aria-label]='"Resize file transfers"|translate',
+    [attr.aria-valuenow]='panelHeight',
+    (pointerdown)='startResize($event)',
+    (pointermove)='resize($event)',
+    (pointerup)='stopResize($event)',
+    (pointercancel)='stopResize($event)',
+    (lostpointercapture)='resizing = false',
+    (keydown)='resizeWithKeyboard($event)'
+)
+.transfer-header
+    .transfer-title
+        i.fas.fa-arrow-right-arrow-left(aria-hidden='true')
+        strong(translate) File transfers
+    .transfer-actions
+        button.text-button(type='button', *ngIf='hasActive', (click)='cancelAll()', [attr.aria-label]='"Abort all"|translate', [ngbTooltip]='"Abort all"|translate')
+            i.fas.fa-ban(aria-hidden='true')
+            span(translate) Abort all
+        button.text-button(type='button', [disabled]='!hasFinished', (click)='clearFinished()', [attr.aria-label]='"Clear finished"|translate', [ngbTooltip]='"Clear finished"|translate')
+            i.fas.fa-trash-can(aria-hidden='true')
+            span(translate) Clear finished
+        button.icon-button(type='button', (click)='closed.emit()', [ngbTooltip]='"Hide"|translate', [attr.aria-label]='"Hide"|translate')
+            i.fas.fa-chevron-down(aria-hidden='true')
+.transfer-tools
+    .transfer-summary([attr.aria-label]='"File transfers"|translate')
+        button(type='button', [class.selected]='filter === "all"', [attr.aria-pressed]='filter === "all"', (click)='filter = "all"')
+            span(translate) All
+            strong {{summary.queued + summary.running + summary.completed + summary.failed + summary.cancelled}}
+        button(type='button', [class.selected]='filter === "active"', [attr.aria-pressed]='filter === "active"', (click)='filter = "active"')
+            span(translate) In progress
+            strong {{summary.queued + summary.running}}
+        button(type='button', [class.selected]='filter === "completed"', [attr.aria-pressed]='filter === "completed"', (click)='filter = "completed"')
+            span(translate) Succeeded
+            strong.success {{summary.completed}}
+        button(type='button', [class.selected]='filter === "failed"', [attr.aria-pressed]='filter === "failed"', (click)='filter = "failed"')
+            span(translate) Failed
+            strong.failure {{summary.failed}}
+        button(type='button', [class.selected]='filter === "cancelled"', [attr.aria-pressed]='filter === "cancelled"', (click)='filter = "cancelled"')
+            span(translate) Cancelled
+            strong {{summary.cancelled}}
+    .transfer-search
+        i.fas.fa-search(aria-hidden='true')
+        input(type='search', [(ngModel)]='search', [placeholder]='"Search file paths"|translate', [attr.aria-label]='"Search file paths"|translate')
+.transfer-table
+    .transfer-columns(aria-hidden='true')
+        span(translate) File path
+        span.transfer-size(translate) Size
+        span.transfer-speed(translate) Speed
+        span(translate) Progress / result
+        span
+    .transfer-list
+        .transfer(*ngFor='let row of rows; trackBy: trackTransfer', [attr.data-state]='row.transfer.getState()', [class.directory]='row.transfer.isDirectory')
+            .transfer-file
+                i.fas([class.fa-folder]='row.transfer.isDirectory', [class.fa-arrow-down]='!row.transfer.isDirectory && row.transfer.direction === "download"', [class.fa-arrow-up]='!row.transfer.isDirectory && row.transfer.direction === "upload"', [ngbTooltip]='(row.transfer.direction === "download" ? "Download" : "Upload files")|translate', aria-hidden='true')
+                .transfer-details
+                    button.transfer-path(type='button', [title]='row.path', [style.paddingLeft.px]='(row.depth > 4 ? 4 : row.depth) * 8', (click)='showTransfer(row.transfer)') {{row.path}}
+                    .transfer-meta(*ngIf='row.transfer.getStatus()') {{row.transfer.getStatus()}}
+                    .transfer-error(*ngIf='row.transfer.getError()') {{row.transfer.getError()}}
+            span.transfer-size {{row.transfer.getSize()|filesize}}
+            span.transfer-speed
+                span(*ngIf='row.transfer.isActive() && row.transfer.getSpeed(); else noSpeed') {{row.transfer.getSpeed()|filesize}}/s
+                ng-template(#noSpeed) —
+            .transfer-result
+                .transfer-state
+                    i.fas.fa-circle-check(*ngIf='row.transfer.isComplete()', aria-hidden='true')
+                    i.fas.fa-circle-exclamation(*ngIf='row.transfer.isFailed()', aria-hidden='true')
+                    i.fas.fa-spinner.fa-spin(*ngIf='row.transfer.getState() === "running"', aria-hidden='true')
+                    span {{stateLabel(row.transfer)|translate}}
+                    span.transfer-percent(*ngIf='row.transfer.isActive()') {{getProgress(row.transfer)}}%
+                .progress(*ngIf='row.transfer.isActive()', role='progressbar', [attr.aria-label]='row.path', [attr.aria-valuenow]='getProgress(row.transfer)', aria-valuemin='0', aria-valuemax='100')
+                    .progress-bar([style.width.%]='getProgress(row.transfer)')
+            button.icon-button(type='button', *ngIf='row.transfer.isActive()', (click)='row.transfer.cancel()', [ngbTooltip]='"Cancel transfer"|translate', [attr.aria-label]='"Cancel transfer"|translate')
+                i.fas.fa-times(aria-hidden='true')
+            .action-spacer(*ngIf='!row.transfer.isActive()')
+        .transfer-empty(*ngIf='rows.length === 0')
+            i.fas.fa-inbox(aria-hidden='true')
+            span(*ngIf='transfers.length === 0', translate) Uploads and downloads will appear here.
+            span(*ngIf='transfers.length > 0', translate) No transfers match this filter.
+.transfer-footer(translate) Directory transfers include every file. Results stay here until cleared.

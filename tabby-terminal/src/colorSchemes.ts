@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core'
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker'
 import { TerminalColorSchemeProvider } from './api/colorSchemeProvider'
-import { TerminalColorScheme } from 'tabby-core'
+import { TerminalColorScheme, TranslateService } from 'tabby-core'
 
 @Injectable({ providedIn: 'root' })
 export class DefaultColorSchemes extends TerminalColorSchemeProvider {
     static defaultColorScheme: TerminalColorScheme = {
-        name: 'Tabby Default',
+        name: _('Tabby Default'),
         foreground: '#cacaca',
         background: '#171717',
         cursor: '#bbbbbb',
@@ -30,7 +31,7 @@ export class DefaultColorSchemes extends TerminalColorSchemeProvider {
     }
 
     static defaultLightColorScheme: TerminalColorScheme = {
-        name: 'Tabby Default Light',
+        name: _('Tabby Default Light'),
         foreground: '#4d4d4c',
         background: '#ffffff',
         cursor: '#4d4d4c',
@@ -60,4 +61,10 @@ export class DefaultColorSchemes extends TerminalColorSchemeProvider {
             DefaultColorSchemes.defaultLightColorScheme,
         ]
     }
+}
+
+/** Localize the built-in defaults while preserving user and community scheme names. */
+export function colorSchemeDisplayName (name: string, translate: TranslateService): string {
+    const defaults = [DefaultColorSchemes.defaultColorScheme.name, DefaultColorSchemes.defaultLightColorScheme.name]
+    return defaults.includes(name) ? translate.instant(name) : name
 }

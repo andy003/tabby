@@ -1,0 +1,208 @@
+// Workbench colors are independent of the terminal's ANSI palette.
+:root {
+    --workspace-font: 'Segoe UI', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+    --workspace-bg: #f4f6fa;
+    --workspace-surface: #fff;
+    --workspace-subtle: #f8fafc;
+    --workspace-chrome: #edf1f6;
+    --workspace-border: #dce3ec;
+    --workspace-border-strong: #c4cfdd;
+    --workspace-text: #263448;
+    --workspace-muted: #64748b;
+    --workspace-accent: #2864dc;
+    --workspace-accent-hover: #1c50b8;
+    --workspace-hover: #f0f5ff;
+    --workspace-selected: #e7efff;
+    --workspace-focus: 0 0 0 3px #2864dc1f;
+    --workspace-shadow: 0 12px 36px #172b4d1a, 0 2px 6px #172b4d0d;
+}
+
+settings-tab, .modal-content, .workspace-menu {
+    --bs-body-bg: var(--workspace-surface);
+    --bs-body-color: var(--workspace-text);
+    --body-bg: var(--workspace-surface);
+    --theme-fg: var(--workspace-text);
+    --theme-fg-more: var(--workspace-muted);
+    --theme-fg-more-2: #7b8798;
+    --theme-fg-less: #1e293b;
+    --theme-fg-less-2: #172338;
+    --theme-bg: var(--workspace-surface);
+    --theme-bg-more: var(--workspace-subtle);
+    --theme-bg-more-2: var(--workspace-chrome);
+    --theme-bg-less: var(--workspace-bg);
+    --theme-secondary: var(--workspace-chrome);
+    --theme-secondary-fg: var(--workspace-text);
+    --theme-primary: var(--workspace-accent);
+    --theme-primary-fg: #fff;
+    --theme-info: var(--workspace-accent);
+    --theme-info-fg: #fff;
+    --theme-danger: #c63d4d;
+    --theme-danger-fg: #fff;
+    --theme-danger-less: #ad3040;
+    --theme-danger-active-bg: #ad3040;
+    --theme-danger-active-fg: #fff;
+    --theme-success: #25826b;
+    --theme-success-fg: #fff;
+    --theme-success-less: #1b6c58;
+    --theme-success-active-bg: #1b6c58;
+    --theme-success-active-fg: #fff;
+    --theme-warning: #fff1ce;
+    --theme-warning-fg: #805814;
+    --theme-warning-less: #f8e4b2;
+    --theme-warning-active-bg: #f8e4b2;
+    --theme-warning-active-fg: #805814;
+    --bs-danger-rgb: 198, 61, 77;
+    --bs-success-rgb: 37, 130, 107;
+    --bs-emphasis-color: var(--workspace-text);
+    --bs-emphasis-color-rgb: 38, 52, 72;
+    --bs-border-color: var(--workspace-border);
+    --bs-primary: var(--workspace-accent);
+    --bs-secondary: var(--workspace-chrome);
+    --bs-form-control-bg: var(--workspace-surface);
+    --bs-link-color: var(--workspace-accent);
+    color: var(--workspace-text);
+    background: var(--workspace-surface);
+    font: 13px/1.55 var(--workspace-font);
+    color-scheme: light;
+
+    .form-control, .form-select, .input-group-text {
+        color: var(--workspace-text);
+        background-color: var(--workspace-surface);
+        border: 1px solid var(--workspace-border-strong);
+        border-radius: 5px;
+        font-size: 13px;
+        min-height: 34px;
+        transition: border-color .12s, box-shadow .12s;
+        &::placeholder { color: #7b8798; opacity: 1; }
+        &:hover:not(:disabled) { border-color: #94a7bf; }
+        &:focus { border-color: var(--workspace-accent); box-shadow: var(--workspace-focus); }
+        &:disabled { background: var(--workspace-chrome); color: var(--workspace-muted); }
+    }
+    .input-group-text { background: var(--workspace-subtle); color: var(--workspace-muted); }
+    h1, h2, h3, h4, h5 { color: var(--workspace-text); font-weight: 600; letter-spacing: -.3px; }
+    h3 { font-size: 18px; margin-bottom: 18px; }
+    .btn { border-radius: 5px; border-width: 1px; font-size: 13px; font-weight: 500; padding: 6px 12px; }
+    .btn-sm { padding: 4px 9px; font-size: 12px; }
+    .btn-primary, .btn-info {
+        --bs-btn-color: #fff;
+        --bs-btn-bg: var(--workspace-accent);
+        --bs-btn-border-color: var(--workspace-accent);
+        --bs-btn-hover-color: #fff;
+        --bs-btn-hover-bg: var(--workspace-accent-hover);
+        --bs-btn-hover-border-color: var(--workspace-accent-hover);
+        --bs-btn-active-bg: #17459f;
+        --bs-btn-active-color: #fff;
+        --bs-btn-disabled-bg: var(--workspace-accent);
+        --bs-btn-disabled-border-color: var(--workspace-accent);
+        --bs-btn-disabled-color: #fff;
+    }
+    .btn-secondary {
+        --bs-btn-color: var(--workspace-text);
+        --bs-btn-bg: var(--workspace-surface);
+        --bs-btn-border-color: var(--workspace-border-strong);
+        --bs-btn-hover-color: var(--workspace-accent);
+        --bs-btn-hover-bg: var(--workspace-hover);
+        --bs-btn-hover-border-color: #a8bfe6;
+        --bs-btn-active-color: var(--workspace-accent);
+        --bs-btn-active-bg: var(--workspace-selected);
+        --bs-btn-active-border-color: #a8bfe6;
+    }
+    .btn-link { --bs-btn-color: var(--workspace-accent); --bs-btn-hover-color: var(--workspace-accent-hover); }
+    .btn:focus-visible { box-shadow: var(--workspace-focus); }
+    .list-group {
+        --bs-list-group-bg: var(--workspace-surface);
+        --bs-list-group-color: var(--workspace-text);
+        --bs-list-group-action-color: var(--workspace-text);
+        --bs-list-group-action-hover-color: var(--workspace-accent);
+        --bs-list-group-action-hover-bg: var(--workspace-hover);
+        --bs-list-group-active-color: var(--workspace-accent);
+        --bs-list-group-active-bg: var(--workspace-selected);
+        --bs-list-group-border-color: var(--workspace-border);
+    }
+    .list-group-item { color: var(--workspace-text); }
+    .nav {
+        --bs-nav-link-color: var(--workspace-muted);
+        --bs-nav-link-hover-color: var(--workspace-accent);
+        --bs-nav-pills-link-active-bg: var(--workspace-selected);
+        --bs-nav-pills-link-active-color: var(--workspace-accent);
+    }
+    .text-muted { opacity: 1; color: var(--workspace-muted) !important; }
+    .text-bg-secondary { color: var(--workspace-muted) !important; background: var(--workspace-chrome) !important; }
+    .form-line { border-color: var(--workspace-border); padding-top: 16px; padding-bottom: 16px; }
+    .form-line > .header .description { color: var(--workspace-muted); opacity: 1; font-size: 12px; line-height: 1.6; }
+    .form-switch .form-check-input {
+        background-color: #c9d2df;
+        border-color: #c9d2df;
+        --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+        &:checked { background-color: var(--workspace-accent); border-color: var(--workspace-accent); }
+        &:focus-visible { box-shadow: var(--workspace-focus); }
+    }
+    .bg-dark { background: var(--workspace-subtle) !important; color: var(--workspace-text); }
+    a { color: var(--workspace-accent); }
+    .dropdown-menu {
+        --bs-dropdown-bg: var(--workspace-surface);
+        --bs-dropdown-color: var(--workspace-text);
+        --bs-dropdown-link-color: var(--workspace-text);
+        --bs-dropdown-link-hover-color: var(--workspace-accent);
+        --bs-dropdown-link-hover-bg: var(--workspace-hover);
+        --bs-dropdown-border-color: var(--workspace-border);
+        --bs-dropdown-border-radius: 6px;
+        box-shadow: var(--workspace-shadow);
+    }
+    *::-webkit-scrollbar-thumb { background: #c4cedb; border-radius: 8px; }
+    *::-webkit-scrollbar-thumb:hover { background: #9daec3; }
+}
+
+.modal-content {
+    border: 1px solid var(--workspace-border);
+    border-radius: 10px;
+    box-shadow: var(--workspace-shadow), 0 24px 80px #172b4d26;
+
+    .modal-header { padding: 20px 24px; background: var(--workspace-surface); border-bottom: 1px solid var(--workspace-border); border-radius: 9px 9px 0 0; }
+    .modal-header h3 { font-size: 18px; margin: 0; }
+    .modal-body { padding: 20px 24px; }
+    .modal-footer { padding: 14px 24px; background: var(--workspace-subtle); border-top: 1px solid var(--workspace-border); border-radius: 0 0 9px 9px; gap: 4px; }
+    .nav-tabs { --bs-nav-tabs-border-color: var(--workspace-accent); }
+    .nav-tabs .nav-link { font-weight: 500; text-transform: none; }
+    .nav-tabs .nav-link.active { color: var(--workspace-accent); }
+}
+.modal-backdrop { --bs-backdrop-bg: #172338; --bs-backdrop-opacity: .32; }
+
+ngb-typeahead-window.dropdown-menu {
+    --bs-dropdown-bg: var(--workspace-surface);
+    --bs-dropdown-color: var(--workspace-text);
+    --bs-dropdown-link-color: var(--workspace-text);
+    --bs-dropdown-link-hover-bg: var(--workspace-hover);
+    --bs-dropdown-link-active-bg: var(--workspace-selected);
+    --bs-dropdown-link-active-color: var(--workspace-accent);
+    --bs-dropdown-border-color: var(--workspace-border);
+    font: 13px var(--workspace-font);
+    box-shadow: var(--workspace-shadow);
+}
+
+app-root title-bar window-controls button {
+    color: #cdd8e8 !important;
+    svg { fill: currentColor !important; }
+    &:hover { background: #ffffff1a !important; color: #fff !important; }
+    &.btn-danger:hover { background: #c63d4d !important; }
+}
+
+tab-body terminal-toolbar {
+    background: var(--workspace-subtle);
+    color: var(--workspace-text);
+    border-bottom: 1px solid var(--workspace-border);
+    font: 12px/1.5 var(--workspace-font);
+    padding: 6px 12px;
+
+    strong { font-weight: 500; }
+    .btn, .toolbar-pin-button { color: var(--workspace-muted); font-size: 11px; font-weight: 500; border: 1px solid transparent; border-radius: 4px; }
+    .btn:hover, .toolbar-pin-button:hover { background: var(--workspace-selected); color: var(--workspace-accent); }
+}
+
+terminal-tab > .content, ssh-tab > .content, telnet-tab > .content, serial-tab > .content {
+    margin: 7px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modal-content *, settings-tab * { transition: none !important; }
+}

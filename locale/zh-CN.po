@@ -79,19 +79,19 @@ msgstr "代理"
 
 #: locale/tmp-html/tabby-ssh/src/components/sshProfileSettings.component.html:134
 msgid "Agent forwarding"
-msgstr "Agent 转发"
+msgstr "身份代理 转发"
 
 #: locale/tmp-html/tabby-ssh/src/components/sshSettingsTab.component.html:35
 msgid "Agent pipe path"
-msgstr "Agent pipe 路径"
+msgstr "身份代理 管道 路径"
 
 #: locale/tmp-html/tabby-ssh/src/components/sshSettingsTab.component.html:24
 msgid "Agent type"
-msgstr "Agent 类型"
+msgstr "身份代理 类型"
 
 #: locale/tmp-html/tabby-terminal/src/components/terminalSettingsTab.component.html:169
 msgid "Allows opening .bat files in tabs, but breaks some shells"
-msgstr "允许在标签页中打开 .bat 文件，但可能导致某些 Shell 异常"
+msgstr "允许在标签页中打开 .bat 文件，但可能导致某些 命令解释器 异常"
 
 #: locale/tmp-html/tabby-settings/src/components/settingsTab.component.html:60
 msgid "Allows quickly opening a terminal in the selected folder"
@@ -220,7 +220,7 @@ msgstr "底部"
 
 #: locale/tmp-html/tabby-terminal/src/components/terminalSettingsTab.component.html:109
 msgid "Bracketed paste (requires shell support)"
-msgstr "Bracketed 粘贴（需要 Shell 支持）"
+msgstr "括号模式 粘贴（需要 命令解释器 支持）"
 
 #: tabby-terminal/src/services/multifocus.service.ts:19
 msgid "Broadcast mode. Click anywhere to cancel."
@@ -354,7 +354,7 @@ msgstr "命令行"
 
 #: locale/tmp-html/tabby-ssh/src/components/sshProfileSettings.component.html:13
 msgid "Command's stdin/stdout is used instead of a network connection"
-msgstr "使用命令的 stdin/stdout，而不是网络连接。"
+msgstr "使用命令的 标准输入/标准输出，而不是网络连接。"
 
 #: tabby-core/src/services/commands.service.ts:105
 msgid "Commands"
@@ -630,7 +630,7 @@ msgstr "禁用动态标签页标题"
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:218
 msgid "Disable fluent background while dragging"
-msgstr "拖动时禁用 Fluent 背景"
+msgstr "拖动时禁用 流畅设计 背景"
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:204
 msgid "Disable GPU acceleration"
@@ -757,7 +757,7 @@ msgstr "有可用更新时自动安装。"
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:211
 msgid "Enable fluent background option"
-msgstr "启用 Fluent 背景选项"
+msgstr "启用 流畅设计 背景选项"
 
 #: locale/tmp-html/tabby-terminal/src/components/appearanceSettingsTab.component.html:16
 msgid "Enable font ligatures"
@@ -834,7 +834,7 @@ msgstr "固定"
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:219
 msgid "Fluent background sometimes causes drag lag"
-msgstr "Fluent 背景有时会导致拖动延迟"
+msgstr "流畅设计 背景有时会导致拖动延迟"
 
 #: tabby-terminal/src/tabContextMenu.ts:82
 msgid "Focus all panes"
@@ -918,7 +918,7 @@ msgstr "强制使用 LF"
 
 #: locale/tmp-html/tabby-ssh/src/components/sshSettingsTab.component.html:25
 msgid "Forces a specific SSH agent connection type."
-msgstr "强制特定的 SSH Agent 连接类型"
+msgstr "强制特定的 SSH 身份代理 连接类型"
 
 #: locale/tmp-html/tabby-ssh/src/components/sshProfileSettings.component.html:105
 msgid "Forget"
@@ -1209,7 +1209,7 @@ msgstr "为当前的 SSH 会话启动 WinSCP"
 #: locale/tmp-html/tabby-ssh/src/components/sftpPanel.component.html:16
 #: locale/tmp-html/tabby-ssh/src/components/sshTab.component.html:7
 msgid "Learn how to allow Tabby to detect remote shell's working directory."
-msgstr "了解如何让 Tabby 检测远程 shell 的工作目录。"
+msgstr "了解如何让 Tabby 检测远程 命令解释器 的工作目录。"
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:134
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:76
@@ -1219,7 +1219,7 @@ msgstr "左侧"
 
 #: locale/tmp-html/tabby-terminal/src/components/terminalSettingsTab.component.html:40
 msgid "Lets the shell handle Meta key instead of OS"
-msgstr "使用 Shell 替代操作系统处理 Meta 键"
+msgstr "使用 命令解释器 替代操作系统处理 元键"
 
 #: locale/tmp-html/tabby-terminal/src/components/colorSchemeSettingsTab.component.html:22
 msgid "Light mode"
@@ -1340,6 +1340,15 @@ msgid "New config on {platform}"
 msgstr "{platform} 上的新配置"
 
 #: tabby-settings/src/components/profilesSettingsTab.component.ts:144
+msgid "Rename group"
+msgstr "重命名分组"
+
+msgid "Could not rename group"
+msgstr "无法重命名分组"
+
+msgid "Could not create group"
+msgstr "无法创建分组"
+
 msgid "New group name"
 msgstr "新建群组名称"
 
@@ -1582,7 +1591,7 @@ msgstr "按下鼠标滚轮（或中间按键）时粘贴"
 
 #: locale/tmp-html/tabby-ssh/src/components/sshSettingsTab.component.html:43
 msgid "Path or address of the local X11 socket"
-msgstr "本地 X11 socket 的路径或地址"
+msgstr "本地 X11 套接字 的路径或地址"
 
 #: locale/tmp-html/tabby-terminal/src/components/terminalToolbar.component.html:4
 msgid "Pin"
@@ -1705,7 +1714,7 @@ msgstr "重新连接"
 
 #: tabby-terminal/src/hotkeys.ts:102
 msgid "Reconnect current tab (Serial/Telnet/SSH)"
-msgstr "重新连接当前标签页 (Serial/Telnet/SSH)"
+msgstr "重新连接当前标签页 (串口/Telnet/SSH)"
 
 #: tabby-core/src/utils.ts:64
 msgid "Red"
@@ -1968,7 +1977,7 @@ msgstr "设置为 0 以禁用最近的配置"
 
 #: locale/tmp-html/tabby-ssh/src/components/sshSettingsTab.component.html:36
 msgid "Sets the SSH agent's named pipe path."
-msgstr "设置 SSH agent 的命名 pipe 路径"
+msgstr "设置 SSH 身份代理 的命名 管道 路径"
 
 #: tabby-settings/src/buttonProvider.ts:28
 #: tabby-settings/src/components/settingsTab.component.ts:57
@@ -1977,15 +1986,15 @@ msgstr "设置"
 
 #: locale/tmp-html/tabby-local/src/components/shellSettingsTab.component.html:2
 msgid "Shell"
-msgstr "Shell"
+msgstr "命令解释器"
 
 #: tabby-terminal/src/api/baseTerminalTab.component.ts:593
 msgid "Shell does not support current path detection"
-msgstr "Shell 不支持当前路径检测"
+msgstr "命令解释器 不支持当前路径检测"
 
 #: locale/tmp-html/tabby-settings/src/components/settingsTab.component.html:59
 msgid "Shell integration"
-msgstr "Shell 集成"
+msgstr "命令解释器 集成"
 
 #: locale/tmp-html/tabby-settings/src/components/profilesSettingsTab.component.html:50
 #: locale/tmp-html/tabby-settings/src/components/vaultSettingsTab.component.html:25
@@ -2062,7 +2071,7 @@ msgstr "Sixel 图形支持（实验性）"
 
 #: locale/tmp-html/tabby-ssh/src/components/sshProfileSettings.component.html:140
 msgid "Skip MoTD/banner"
-msgstr "跳过 MoTD/横幅消息"
+msgstr "跳过 登录问候/横幅消息"
 
 #: locale/tmp-html/tabby-serial/src/components/serialProfileSettings.component.html:74
 msgid "Slow feed"
@@ -2388,7 +2397,7 @@ msgstr "上传为新配置"
 
 #: locale/tmp-html/tabby-terminal/src/components/terminalSettingsTab.component.html:39
 msgid "Use {altKeyName} as the Meta key"
-msgstr "使用 {altKeyName} 作为 Meta 键"
+msgstr "使用 {altKeyName} 作为 元键"
 
 #: locale/tmp-html/tabby-local/src/components/shellSettingsTab.component.html:5
 msgid "Use ConPTY"
@@ -2579,3 +2588,1247 @@ msgstr "缩小"
 msgctxt "[Dynamic] port forwarding"
 msgid "id.port-forwarding.dynamic"
 msgstr "动态端口转发"
+
+#: tabby-core/src/components/profileTree.component.pug
+#: tabby-core/src/components/profileTree.component.ts
+msgid "New group"
+msgstr "新建分组"
+
+#: tabby-core/src/components/profileTree.component.ts
+msgid "New subgroup"
+msgstr "新建子分组"
+
+#: tabby-core/src/components/profileTree.component.pug
+msgid "Drop session here"
+msgstr "将会话拖到这里"
+
+#: tabby-core/src/components/profileTree.component.ts
+msgid "Could not move session"
+msgstr "无法移动会话"
+
+#: tabby-core/src/components/profileTree.component.pug
+msgid "Move to group"
+msgstr "移动到分组"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "About Tabby"
+msgstr "关于 Tabby"
+
+#: tabby-terminal/src/features/zmodem.ts:71
+msgid "Accept"
+msgstr "接受"
+
+#: tabby-terminal/src/features/zmodem.ts:68
+msgid "Accept a ZMODEM session?"
+msgstr "是否接受文件传输会话？"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug
+msgid "Application menu"
+msgstr "应用菜单"
+
+#: tabby-serial/src/components/serialProfileSettings.component.pug
+#: tabby-ssh/src/components/sshProfileSettings.component.pug
+msgid "Ask every time"
+msgstr "每次询问"
+
+#: tabby-ssh/src/components/sshSettingsTab.component.pug
+msgid "Auto-detect"
+msgstr "自动检测"
+
+#: tabby-core/src/components/selectorModal.component.pug:1
+msgid "BACKSPACE"
+msgstr "退格键"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug
+msgid "Broadcast input to all terminals; click again to stop"
+msgstr "向所有终端广播输入，再次点击停止"
+
+#: tabby-settings/src/components/profilesSettingsTab.component.pug
+msgid "Built-in Profiles"
+msgstr "内置会话"
+
+#: tabby-terminal/src/components/searchPanel.component.pug
+msgid "Case sensitivity"
+msgstr "区分大小写"
+
+#: tabby-core/src/components/profileTree.component.ts:229
+msgid "Collapse group"
+msgstr "折叠分组"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+#: tabby-core/src/components/startPage.component.pug:1
+msgid "Command palette"
+msgstr "命令面板"
+
+#: tabby-settings/src/components/settingsTab.component.pug:1
+msgid "Community"
+msgstr "用户社区"
+
+#: tabby-ssh/src/components/sshProfileSettings.component.pug:1
+msgid "Compression"
+msgstr "压缩"
+
+#: tabby-settings/src/components/configSyncSettingsTab.component.pug:1
+msgid "Config sync requires an instance of the Tabby Web service."
+msgstr "同步配置需要部署 Tabby 网页服务。"
+
+#: tabby-serial/src/components/serialTab.component.pug:1
+#: tabby-core/src/components/profileTree.component.pug
+msgid "Connect"
+msgstr "连接"
+
+#: tabby-ssh/src/commands.ts:19
+msgid "Connect to an SSH server first"
+msgstr "请先连接远程服务器"
+
+#: tabby-terminal/src/hotkeys.ts:146
+msgid "Copy session output (debug)"
+msgstr "复制会话输出（调试）"
+
+#: tabby-terminal/src/hotkeys.ts:130
+msgid "Copy terminal state (debug)"
+msgstr "复制终端状态（调试）"
+
+#: tabby-ssh/src/components/sshTab.component.ts:115
+msgid "Could not set up port forward on {host}"
+msgstr "无法为 {host} 设置端口转发"
+
+#: tabby-settings/src/components/profilesSettingsTab.component.pug
+msgid "Custom Profiles"
+msgstr "自定义会话"
+
+#: tabby-ssh/src/components/sshPortForwardingConfig.component.pug
+msgid "Description"
+msgstr "说明"
+
+#: tabby-settings/src/components/windowSettingsTab.component.pug:1
+msgid "Displays a full tree of profiles in the sidebar."
+msgstr "在侧栏中显示完整的会话树。"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+#: tabby-core/src/components/startPage.component.pug:1
+msgid "Documentation"
+msgstr "使用文档"
+
+#: tabby-ssh/src/sftpContextMenu.ts:38
+msgid "Download directory"
+msgstr "下载目录"
+
+#: tabby-electron/src/services/platform.service.ts:325
+msgid "Download here"
+msgstr "下载到此处"
+
+#: tabby-settings/src/components/profilesSettingsTab.component.ts:83
+msgid "Duplicate an existing profile"
+msgstr "复制已有会话配置"
+
+#: tabby-ssh/src/components/sshProfileSettings.component.pug:1
+msgid "Duplicated and restored tabs will start in the last working directory, if the remote shell is set up to report it (see the \"Shell working directory reporting\" wiki page)"
+msgstr "如果远程命令解释器已配置工作目录上报，复制或恢复的标签页将从上次工作目录启动。详情请参阅工作目录上报文档。"
+
+#: tabby-core/src/components/profileTree.component.ts:234
+msgid "Edit group"
+msgstr "编辑分组"
+
+#: tabby-core/src/components/profileTree.component.ts:209
+msgid "Edit profile"
+msgstr "编辑会话"
+
+#: tabby-core/src/components/selectorModal.component.pug:1
+msgid "ENTER"
+msgstr "回车键"
+
+#: tabby-serial/src/components/serialProfileSettings.component.pug:1
+msgid "Even"
+msgstr "偶校验"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "Exit"
+msgstr "退出"
+
+#: tabby-core/src/components/profileTree.component.ts:229
+msgid "Expand group"
+msgstr "展开分组"
+
+#: tabby-terminal/src/components/loginScriptsSettings.component.pug
+msgid "Expect"
+msgstr "等待匹配内容"
+
+#: tabby-electron/src/terminalContextMenu.ts:23
+msgid "Export to file"
+msgstr "导出到文件"
+
+#: tabby-local/src/components/environmentEditor.component.pug:1
+msgid "extend PATH"
+msgstr "扩展命令搜索路径"
+
+#: tabby-ssh/src/components/sshPortForwardingModal.component.ts:28
+#: tabby-ssh/src/session/ssh.ts:506
+msgid "Failed to forward port {fw}"
+msgstr "端口转发失败：{fw}"
+
+#: tabby-ssh/src/components/sshPortForwardingModal.component.ts:38
+msgid "Failed to stop forwarding {fw}"
+msgstr "停止端口转发失败：{fw}"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug
+msgid "File browser for the active SSH session"
+msgstr "当前远程会话的文件管理器"
+
+#: tabby-core/src/components/profileTree.component.ts:431
+msgid "Filter results"
+msgstr "搜索结果"
+
+#: tabby-core/src/components/profileTree.component.pug
+msgid "Filter sessions"
+msgstr "搜索会话"
+
+#: tabby-ssh/src/components/sftpPanel.component.pug
+msgid "Filter..."
+msgstr "输入筛选条件…"
+
+#: tabby-ssh/src/components/keyboardInteractiveAuthPanel.component.pug:1
+msgid "Finish"
+msgstr "完成"
+
+#: tabby-terminal/src/components/terminalSettingsTab.component.pug:1
+msgid "Flash taskbar"
+msgstr "闪烁任务栏图标"
+
+#: tabby-terminal/src/components/terminalSettingsTab.component.pug:1
+msgid "Flash the taskbar or dock icon when the terminal bell rings and the window is not focused"
+msgstr "窗口未获得焦点时，终端响铃将使任务栏或程序坞图标闪烁"
+
+#: tabby-terminal/src/components/terminalSettingsTab.component.pug:1
+msgid "Flatten pasted text into a single line for terminals that do not support multiline paste"
+msgstr "将粘贴内容合并为一行，适用于不支持多行粘贴的终端"
+
+#: tabby-settings/src/components/windowSettingsTab.component.pug:1
+msgid "Fluent"
+msgstr "流畅设计效果"
+
+#: tabby-ssh/src/components/sshPortForwardingModal.component.ts:26
+msgid "Forwarded {fw}"
+msgstr "已转发端口：{fw}"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "Full screen"
+msgstr "全屏"
+
+#: tabby-terminal/src/components/colorSchemeSettingsTab.component.pug:1
+msgid "Generate 256-color palette"
+msgstr "生成扩展调色板"
+
+#: tabby-terminal/src/components/colorSchemeSettingsTab.component.pug:1
+msgid "Generate extended 256-color palette from your base 16 colors"
+msgstr "根据基础的十六种颜色生成二百五十六色扩展调色板"
+
+#: tabby-settings/src/components/settingsTab.component.pug:1
+msgid "GitHub"
+msgstr "源码仓库"
+
+#: tabby-terminal/src/components/colorSchemeSettingsTab.component.pug:1
+msgid "Harmonious palette"
+msgstr "协调调色板"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "Help"
+msgstr "帮助"
+
+#: tabby-core/src/components/profileTree.component.pug
+msgid "Hide sidebar"
+msgstr "隐藏侧栏"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+#: tabby-core/src/components/appRoot.component.pug
+msgid "Home"
+msgstr "首页"
+
+#: tabby-local/src/components/localProfileSettings.component.pug
+msgid "Home directory"
+msgstr "主目录"
+
+#: tabby-terminal/src/components/colorSchemePreview.component.pug:1
+msgid "Icons:"
+msgstr "图标："
+
+#: tabby-terminal/src/features/zmodem.ts:69
+msgid "If you have not requested it, it could be a sign of malicious activity."
+msgstr "如果这不是您主动发起的请求，可能存在恶意操作。"
+
+#: tabby-terminal/src/components/streamProcessingSettings.component.ts:56
+msgid "Implicit CR in every LF"
+msgstr "换行时自动回到行首"
+
+#: tabby-terminal/src/components/streamProcessingSettings.component.ts:57
+msgid "Implicit LF in every CR"
+msgstr "回到行首时自动换行"
+
+#: tabby-terminal/src/hotkeys.ts:154
+msgid "Insert new line"
+msgstr "插入换行"
+
+#: tabby-ssh/src/components/sshSettingsTab.component.pug:1
+msgid "Keep remote files beside the terminal."
+msgstr "在终端旁显示远程文件。"
+
+#: tabby-settings/src/components/configSyncSettingsTab.component.pug:1
+msgid "Learn more"
+msgstr "了解更多"
+
+#: tabby-terminal/src/hotkeys.ts:142
+msgid "Load session output (debug)"
+msgstr "载入会话输出（调试）"
+
+#: tabby-terminal/src/hotkeys.ts:126
+msgid "Load terminal state (debug)"
+msgstr "载入终端状态（调试）"
+
+#: tabby-settings/src/commands.ts:23
+#: tabby-core/src/components/profileTree.component.pug
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+#: tabby-core/src/components/startPage.component.pug:1
+msgid "Manage sessions"
+msgstr "管理会话"
+
+#: tabby-serial/src/components/serialProfileSettings.component.pug:1
+msgid "Mark"
+msgstr "标记校验"
+
+#: tabby-settings/src/components/setVaultPassphraseModal.component.pug
+#: tabby-core/src/components/unlockVaultModal.component.pug
+msgid "Master passphrase"
+msgstr "主密码"
+
+#: tabby-terminal/src/commands.ts:21
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "MultiExec"
+msgstr "广播输入"
+
+#: tabby-ssh/src/components/sshProfileSettings.component.pug:1
+msgid "Multiplex multiple shells through the same connection"
+msgstr "通过同一连接复用多个终端会话"
+
+#: tabby-ssh/src/components/sshSettingsTab.component.pug:1
+msgid "Named pipe"
+msgstr "命名管道"
+
+#: tabby-settings/src/components/profilesSettingsTab.component.pug:1
+msgid "New profile group"
+msgstr "新建分组"
+
+#: tabby-core/src/components/profileTree.component.ts:200
+#: tabby-core/src/components/profileTree.component.ts:263
+#: tabby-settings/src/commands.ts:22
+#: tabby-settings/src/commands.ts:40
+#: tabby-core/src/components/profileTree.component.pug:1
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+#: tabby-core/src/components/startPage.component.pug:1
+msgid "New session"
+msgstr "新建会话"
+
+#: tabby-ssh/src/components/keyboardInteractiveAuthPanel.component.pug:1
+msgid "Next"
+msgstr "下一步"
+
+#: tabby-core/src/hotkeys.ts:48
+msgid "Next tab (MRU order)"
+msgstr "切换到下一标签页（按最近使用顺序）"
+
+#: tabby-ssh/src/components/sftpPanel.component.pug:1
+msgid "No files match the filter \"{filter}\""
+msgstr "没有匹配“{filter}”的文件"
+
+#: tabby-core/src/components/profileTree.component.pug:1
+msgid "No open tabs"
+msgstr "暂无打开的标签页"
+
+#: tabby-core/src/components/profileTree.component.pug:1
+msgid "No recent sessions"
+msgstr "暂无最近会话"
+
+#: tabby-core/src/components/profileTree.component.pug:1
+msgid "No sessions found"
+msgstr "未找到会话"
+
+#: tabby-serial/src/components/serialProfileSettings.component.pug:1
+msgid "Odd"
+msgstr "奇校验"
+
+#: tabby-core/src/components/promptModal.component.pug:1
+msgid "OK"
+msgstr "确定"
+
+#: tabby-settings/src/components/settingsTab.component.pug:1
+msgid "On Discord"
+msgstr "加入用户交流社区"
+
+#: tabby-electron/src/services/platform.service.ts:184
+msgid "Open"
+msgstr "打开"
+
+#: tabby-core/src/components/profileTree.component.pug:1
+msgid "Open tabs"
+msgstr "打开的标签页"
+
+#: tabby-ssh/src/components/sshSettingsTab.component.pug:1
+msgid "Open the SFTP browser when connecting"
+msgstr "连接时自动打开文件管理器"
+
+#: tabby-settings/src/components/editProfileGroupModal.component.pug:1
+msgid "Parent Group"
+msgstr "上级分组"
+
+#: tabby-terminal/src/cli.ts:31
+msgid "Paste \"{text}\"?"
+msgstr "是否粘贴“{text}”？"
+
+#: tabby-terminal/src/hotkeys.ts:150
+msgid "Paste session output (debug)"
+msgstr "粘贴会话输出（调试）"
+
+#: tabby-terminal/src/hotkeys.ts:134
+msgid "Paste terminal state (debug)"
+msgstr "粘贴终端状态（调试）"
+
+#: tabby-core/src/hotkeys.ts:72
+msgid "Pin or unpin tab"
+msgstr "固定或取消固定标签页"
+
+#: tabby-core/src/tabContextMenu.ts:151
+msgid "Pin tab"
+msgstr "固定标签页"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug
+msgid "Port forwarding for the active SSH session"
+msgstr "当前远程会话的端口转发"
+
+#: tabby-core/src/hotkeys.ts:52
+msgid "Previous tab (MRU order)"
+msgstr "切换到上一标签页（按最近使用顺序）"
+
+#: tabby-core/src/components/profileTree.component.pug
+msgid "Quick connect: user@host or protocol://host"
+msgstr "快速连接：输入用户名、主机地址或连接地址"
+
+#: tabby-core/src/components/profileTree.component.pug
+msgid "Quick connect…"
+msgstr "快速连接…"
+
+#: tabby-core/src/components/appRoot.component.pug
+msgid "Ready"
+msgstr "就绪"
+
+#: tabby-core/src/components/startPage.component.pug:1
+msgid "Recent sessions"
+msgstr "最近会话"
+
+#: tabby-ssh/src/components/sftpPanel.component.pug:1
+#: tabby-ssh/src/components/sftpPanel.component.pug
+msgid "Refresh"
+msgstr "刷新"
+
+#: tabby-terminal/src/components/terminalSettingsTab.component.pug:1
+msgid "Refresh environment variables from registry"
+msgstr "从注册表刷新环境变量"
+
+#: tabby-terminal/src/components/searchPanel.component.pug
+msgid "Regular expression"
+msgstr "正则表达式"
+
+#: tabby-terminal/src/features/zmodem.ts:72
+msgid "Reject"
+msgstr "拒绝"
+
+#: tabby-terminal/src/components/terminalSettingsTab.component.pug:1
+msgid "Reload PATH and other variables from the Windows registry for each new session"
+msgstr "每次新建会话时，从系统注册表重新读取命令搜索路径及其他环境变量"
+
+#: tabby-ssh/src/components/sshProfileSettings.component.pug:1
+msgid "Remember current directory"
+msgstr "记住当前目录"
+
+#: tabby-core/src/components/unlockVaultModal.component.pug:1
+msgid "Remember for {time} while Tabby is open"
+msgstr "程序运行期间记住 {time}"
+
+#: tabby-core/src/tabContextMenu.ts:118
+msgid "Rename pane"
+msgstr "重命名窗格"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "Reopen closed tab"
+msgstr "重新打开已关闭的标签页"
+
+#: tabby-terminal/src/components/terminalSettingsTab.component.pug:1
+msgid "Replace line breaks with spaces"
+msgstr "将换行替换为空格"
+
+#: tabby-ssh/src/components/keyboardInteractiveAuthPanel.component.pug
+msgid "Response"
+msgstr "输入响应内容"
+
+#: tabby-ssh/src/components/sftpPanel.component.pug:1
+msgid "Retry"
+msgstr "重试"
+
+#: tabby-core/src/components/profileTree.component.ts:204
+#: tabby-local/src/cli.ts:52
+msgid "Run"
+msgstr "运行"
+
+#: tabby-local/src/cli.ts:50
+msgid "Run \"{command}\"?"
+msgstr "是否运行“{command}”？"
+
+#: tabby-ssh/src/components/sshProfileSettings.component.ts:100
+msgid "Save an empty password?"
+msgstr "是否保存空密码？"
+
+#: tabby-core/src/components/startPage.component.pug:1
+msgid "Save an SSH, Telnet or serial connection to get started."
+msgstr "保存一个远程连接或串口连接，即可开始使用。"
+
+#: tabby-ssh/src/components/keyboardInteractiveAuthPanel.component.pug
+msgid "Save password"
+msgstr "保存密码"
+
+#: tabby-terminal/src/hotkeys.ts:138
+msgid "Save session output (debug)"
+msgstr "保存会话输出（调试）"
+
+#: tabby-terminal/src/hotkeys.ts:122
+msgid "Save terminal state (debug)"
+msgstr "保存终端状态（调试）"
+
+#: tabby-core/src/components/startPage.component.pug:1
+msgid "Saved sessions"
+msgstr "已保存会话"
+
+#: tabby-electron/src/terminalContextMenu.ts:39
+msgid "Saved to {path}"
+msgstr "已保存到 {path}"
+
+#: tabby-terminal/src/hotkeys.ts:98
+msgid "Scroll terminal one line down"
+msgstr "终端向下滚动一行"
+
+#: tabby-terminal/src/hotkeys.ts:94
+msgid "Scroll terminal one line up"
+msgstr "终端向上滚动一行"
+
+#: tabby-terminal/src/components/searchPanel.component.pug
+msgid "Search down"
+msgstr "向下查找"
+
+#: tabby-terminal/src/components/searchPanel.component.pug
+msgid "Search up"
+msgstr "向上查找"
+
+#: tabby-electron/src/services/platform.service.ts:325
+msgid "Select destination folder for {name}"
+msgstr "为 {name} 选择目标文件夹"
+
+#: tabby-terminal/src/components/loginScriptsSettings.component.pug
+msgid "Send"
+msgstr "发送内容"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "Session"
+msgstr "会话"
+
+#: tabby-core/src/components/startPage.component.pug:1
+msgid "Session manager"
+msgstr "会话管理"
+
+#: tabby-core/src/components/profileTree.component.pug
+msgid "Session navigation"
+msgstr "会话导航"
+
+#: tabby-settings/src/components/editProfileModal.component.pug
+msgid "Session settings"
+msgstr "会话设置"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug
+msgid "Session tools"
+msgstr "会话工具栏"
+
+#: tabby-core/src/components/profileTree.component.pug:1
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "Sessions"
+msgstr "会话"
+
+#: tabby-core/src/components/startPage.component.pug:1
+msgid "Sessions you open will appear here."
+msgstr "打开过的会话会显示在这里。"
+
+#: tabby-ssh/src/commands.ts:23
+#: tabby-ssh/src/components/sftpPanel.component.pug:1
+#: tabby-ssh/src/components/sshTab.component.pug:1
+#: tabby-core/src/components/profileTree.component.pug:1
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "SFTP"
+msgstr "文件管理"
+
+msgid "SFTP browser"
+msgstr "远程文件"
+
+#: tabby-core/src/tabContextMenu.ts:123
+msgid "Show pane label"
+msgstr "显示窗格标签"
+
+#: tabby-core/src/hotkeys.ts:292
+msgid "Show profile selector for group {name}"
+msgstr "显示“{name}”分组的会话选择器"
+
+#: tabby-settings/src/components/windowSettingsTab.component.pug:1
+msgid "Show profile sidebar"
+msgstr "显示会话侧栏"
+
+#: tabby-serial/src/components/serialProfileSettings.component.pug:1
+msgid "Space"
+msgstr "空格校验"
+
+#: tabby-terminal/src/commands.ts:35
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "Split horizontally"
+msgstr "上下分屏"
+
+#: tabby-terminal/src/commands.ts:34
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "Split vertically"
+msgstr "左右分屏"
+
+#: tabby-ssh/src/commands.ts:29
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "SSH tunnels"
+msgstr "端口转发"
+
+msgid "Start a session"
+msgstr "开始会话"
+
+msgid "Start local terminal"
+msgstr "启动本地终端"
+
+#: tabby-ssh/src/components/sshPortForwardingModal.component.ts:36
+msgid "Stopped forwarding {fw}"
+msgstr "已停止端口转发：{fw}"
+
+#: tabby-core/src/components/appRoot.component.pug
+msgid "tabs"
+msgstr "个标签页"
+
+#: tabby-settings/src/components/profilesSettingsTab.component.ts:83
+msgid "Template"
+msgstr "模板"
+
+#: tabby-ssh/src/components/sshProfileSettings.component.pug:1
+msgid "Terminal type"
+msgstr "终端类型"
+
+#: tabby-core/src/components/unlockVaultModal.component.pug:1
+msgid "The master passphrase is kept in memory only. Closing Tabby requires unlocking the vault again."
+msgstr "主密码仅保存在内存中，关闭程序后需要重新解锁保险库。"
+
+#: tabby-core/src/services/config.service.ts:484
+msgid "The vault must be unlocked to load your configuration."
+msgstr "需要先解锁保险库才能加载配置。"
+
+#: tabby-ssh/src/components/sshProfileSettings.component.ts:101
+msgid "This only works if the server permits empty passwords. Tabby will offer it on every connection."
+msgstr "仅适用于允许空密码的服务器，程序会在每次连接时尝试使用该密码。"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "Toggle session sidebar"
+msgstr "显示或隐藏会话侧栏"
+
+#: tabby-terminal/src/hotkeys.ts:118
+msgid "Toggle the Option key between Meta and normal (macOS)"
+msgstr "切换选项键的特殊键模式与普通模式（苹果系统）"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "Tools"
+msgstr "工具"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "Tunneling"
+msgstr "隧道"
+
+#: tabby-core/src/components/appRoot.component.pug
+msgid "Update available - Click to install"
+msgstr "有可用更新，点击安装"
+
+#: tabby-ssh/src/components/sftpPanel.component.pug:1
+#: tabby-ssh/src/components/sftpPanel.component.pug
+msgid "Upload files"
+msgstr "上传文件"
+
+#: tabby-ssh/src/components/sftpPanel.component.pug:1
+#: tabby-ssh/src/components/sftpPanel.component.pug
+msgid "Upload folder"
+msgstr "上传文件夹"
+
+#: tabby-local/src/components/shellSettingsTab.component.pug:1
+msgid "Use bundled ConPTY"
+msgstr "使用内置伪控制台"
+
+msgid "User sessions"
+msgstr "用户会话"
+
+#: tabby-local/src/components/shellSettingsTab.component.pug:1
+msgid "Uses the newer ConPTY from Windows Terminal"
+msgstr "使用系统终端提供的较新伪控制台实现"
+
+#: tabby-ssh/src/session/ssh.ts:699
+msgid "Using saved password"
+msgstr "正在使用已保存的密码"
+
+#: tabby-local/src/components/environmentEditor.component.pug
+msgid "Value"
+msgstr "值"
+
+#: tabby-ssh/src/components/sshProfileSettings.component.pug:1
+msgid "Value of $TERM reported to the remote host (e.g. xterm-256color, vt100)"
+msgstr "向远程主机报告的终端类型标识"
+
+#: tabby-local/src/components/environmentEditor.component.pug
+msgid "Variable name"
+msgstr "变量名"
+
+#: tabby-core/src/components/workspaceToolbar.component.pug:1
+msgid "View"
+msgstr "视图"
+
+#: tabby-terminal/src/components/colorSchemeSettingsTab.component.pug:1
+msgid "Whether to invert generated light theme colors. This helps give the 256-color palette more semantic meaning."
+msgstr "是否反转生成的浅色主题颜色，以使扩展调色板的色彩语义更清晰。"
+
+#: tabby-terminal/src/components/searchPanel.component.pug
+msgid "Whole word"
+msgstr "全词匹配"
+
+#: tabby-local/src/components/shellSettingsTab.component.pug:1
+msgid "Windows 10 2004 (build 19041) or above is required for the bundled ConPTY"
+msgstr "内置伪控制台需要系统版本达到 19041 或更高版本"
+
+#: tabby-terminal/src/components/terminalSettingsTab.component.pug:1
+msgid "xterm (DOM)"
+msgstr "终端兼容渲染"
+
+#: tabby-terminal/src/components/terminalSettingsTab.component.pug:1
+msgid "xterm (WebGL)"
+msgstr "终端图形渲染"
+
+#: tabby-core/src/components/startPage.component.pug:1
+msgid "Your terminal and remote sessions, in one place"
+msgstr "集中管理本地终端与远程会话"
+
+#: tabby-core/src/services/profiles.service.ts
+msgid "Imported from .ssh/config"
+msgstr "从本地远程连接配置导入"
+
+#: tabby-terminal/src/components/colorSchemeSettingsForMode.component.pug
+msgid "Background"
+msgstr "背景色"
+
+#: tabby-terminal/src/components/colorSchemeSettingsForMode.component.pug
+msgid "Cursor"
+msgstr "光标"
+
+#: tabby-terminal/src/components/colorSchemeSettingsForMode.component.pug
+msgid "Cursor accent"
+msgstr "光标文字颜色"
+
+#: tabby-ssh/src/components/sshSettingsTab.component.pug
+msgid "Default pipe path"
+msgstr "默认的身份代理管道路径"
+
+#: tabby-terminal/src/components/colorSchemeSettingsForMode.component.pug
+msgid "Foreground"
+msgstr "前景色"
+
+#: tabby-terminal/src/components/colorSchemeSettingsForMode.component.pug
+msgid "Selection background"
+msgstr "选区背景色"
+
+#: tabby-terminal/src/components/colorSchemeSettingsForMode.component.pug
+msgid "Selection foreground"
+msgstr "选区文字颜色"
+
+#: tabby-core/src/services/vault.service.ts
+msgid "Add a new file"
+msgstr "添加新文件"
+
+#: tabby-electron/src/services/fileProvider.service.ts
+msgid "Filesystem"
+msgstr "本地文件"
+
+#: tabby-electron/src/services/fileProvider.service.ts
+msgid "Select {description}"
+msgstr "选择{description}"
+
+#: tabby-core/src/services/vault.service.ts
+msgid "Select file"
+msgstr "选择文件"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Afrikaans"
+msgstr "南非荷兰语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Bahasa Indonesia"
+msgstr "印度尼西亚语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Čeština"
+msgstr "捷克语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Dansk"
+msgstr "丹麦语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Deutsch"
+msgstr "德语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "English (simplified)"
+msgstr "英语（简化版）"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "English (traditional)"
+msgstr "英语（传统版）"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "English (UK)"
+msgstr "英语（英国）"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "English (US)"
+msgstr "英语（美国）"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Español"
+msgstr "西班牙语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Français"
+msgstr "法语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Hrvatski"
+msgstr "克罗地亚语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Italiano"
+msgstr "意大利语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Polski"
+msgstr "波兰语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Português"
+msgstr "葡萄牙语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Português do Brasil"
+msgstr "葡萄牙语（巴西）"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Svenska"
+msgstr "瑞典语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Türkçe"
+msgstr "土耳其语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Български"
+msgstr "保加利亚语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Русский"
+msgstr "俄语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Српски"
+msgstr "塞尔维亚语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "Українська"
+msgstr "乌克兰语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "한국어"
+msgstr "韩语"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "中文 (繁體)"
+msgstr "中文（繁体）"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "中文（简体）"
+msgstr "中文（简体）"
+
+#: tabby-core/src/services/locale.service.ts
+msgid "日本語"
+msgstr "日语"
+
+#: tabby-terminal/src/colorSchemes.ts
+msgid "Tabby Default"
+msgstr "Tabby 默认配色"
+
+#: tabby-terminal/src/colorSchemes.ts
+msgid "Tabby Default Light"
+msgstr "Tabby 默认浅色配色"
+
+#: tabby-ssh/src/components/sshProfileSettings.component.ts
+msgid "Private key for {name}"
+msgstr "{name} 的私钥"
+
+#: tabby-ssh/src/components/sftpPanel.component.pug
+msgid "Remote path"
+msgstr "远程路径"
+
+#: tabby-ssh/src/components/sftpPanel.component.pug
+msgid "Go to path"
+msgstr "跳转到路径"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Action"
+msgstr "操作"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Add a button to get started."
+msgstr "添加一个按钮以开始配置。"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Add button"
+msgstr "添加按钮"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Add your frequently used commands here"
+msgstr "在这里添加常用命令"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Append Enter to execute"
+msgstr "发送后自动回车执行"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Application command"
+msgstr "软件操作"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Button label"
+msgstr "按钮名称"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Contextual commands are enabled when the active tab supports them."
+msgstr "当前标签页支持此操作时，按钮才会启用。"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Could not run custom button"
+msgstr "无法执行自定义按钮"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Could not save custom buttons"
+msgstr "无法保存自定义按钮"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Create shortcuts for terminal text or application commands. Buttons run in the active tab."
+msgstr "为终端命令或软件操作创建快捷按钮，按钮作用于当前标签页。"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Custom buttons"
+msgstr "自定义按钮"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Delete button"
+msgstr "删除按钮"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Each button needs a label and an action."
+msgstr "请为每个按钮填写名称和操作内容。"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Edit button"
+msgstr "编辑按钮"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Example: ls -lah"
+msgstr "例如：ls -lah"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Hide button bar"
+msgstr "隐藏按钮栏"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Interpret backslash escapes for Enter, Tab, Escape and control characters."
+msgstr "启用后，可使用反斜杠转义发送回车、制表符、Esc 和控制字符。"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Interpret escape sequences"
+msgstr "解析转义序列"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Manage buttons"
+msgstr "管理按钮"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Move down"
+msgstr "下移"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Move up"
+msgstr "上移"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "New button"
+msgstr "新按钮"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Select a command"
+msgstr "选择操作"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Send text"
+msgstr "发送文本"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Text to send"
+msgstr "发送内容"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Toggle button bar"
+msgstr "显示/隐藏按钮栏"
+
+#: tabby-core/src/components/customButtonsModal.component.pug
+msgid "Unavailable command"
+msgstr "操作当前不可用"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Cannot edit a directory"
+msgstr "无法编辑文件夹"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Could not open local editor"
+msgstr "无法打开本地文本编辑器"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Could not open remote file"
+msgstr "无法打开远程文件"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Double-click a file to edit; saved changes sync automatically."
+msgstr "双击文件进行编辑，本地保存后自动同步。"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Download cancelled"
+msgstr "下载已取消"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Downloading for editing"
+msgstr "正在下载以供编辑"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Last synced"
+msgstr "上次同步"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Not synced"
+msgstr "未同步"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Open local copy"
+msgstr "打开本地副本"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Local copy"
+msgstr "本地副本"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Remote file changed since opening. Local changes have been kept for comparison."
+msgstr "远程文件已被其他操作修改，本地修改已保留，请对比后处理。"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Remote file changed while downloading. Open it again."
+msgstr "下载期间远程文件发生变化，请重新打开。"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Remote file not found"
+msgstr "远程文件不存在"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Remote file sync failed: {name}"
+msgstr "远程文件同步失败：{name}"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Remote file synced: {name}"
+msgstr "远程文件已同步：{name}"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Remote file synchronization"
+msgstr "远程文件同步"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Retry sync"
+msgstr "重试同步"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Symbolic link loop"
+msgstr "符号链接存在循环"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Sync failed"
+msgstr "同步失败"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Sync stopped: disconnected"
+msgstr "连接已断开，同步已停止"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Synced"
+msgstr "已同步"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "Syncing"
+msgstr "同步中"
+
+#: tabby-core/src/components/fileSyncStatus.component.pug
+msgid "This is a binary file. Use Download instead of editing."
+msgstr "这是二进制文件，请使用下载功能。"
+
+#: tabby-ssh/src/components/sftpPanel.component.pug
+msgid "Double-click to open"
+msgstr "双击打开"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "All"
+msgstr "全部"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Cancel transfer"
+msgstr "取消传输"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Cancelled"
+msgstr "已取消"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Clear finished"
+msgstr "清除已结束"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Could not start directory download"
+msgstr "无法开始目录下载"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Directory transfers include every file. Results stay here until cleared."
+msgstr "目录传输会列出所有文件，结果将保留至手动清除。"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Failed"
+msgstr "失败"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "File path"
+msgstr "文件路径"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "In progress"
+msgstr "进行中"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "No transfers match this filter."
+msgstr "没有符合筛选条件的传输任务。"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Preparing file list"
+msgstr "正在扫描文件列表"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Progress / result"
+msgstr "进度 / 结果"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Queued"
+msgstr "排队中"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Search file paths"
+msgstr "搜索文件路径"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Some items did not complete. See the file list for details."
+msgstr "部分项目未完成，请查看文件列表中的具体原因。"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Succeeded"
+msgstr "成功"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Transferring"
+msgstr "传输中"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Transfers finished: {success} succeeded, {failed} failed, {cancelled} cancelled."
+msgstr "传输结束：成功 {success} 项，失败 {failed} 项，取消 {cancelled} 项。"
+
+#: tabby-core/src/components/transfersMenu.component.pug
+msgid "Uploads and downloads will appear here."
+msgstr "上传和下载任务会显示在这里。"
+
+msgid "Resize file transfers"
+msgstr "调整文件传输面板高度"
+
+msgid "Size"
+msgstr "大小"
+
+msgid "Speed"
+msgstr "速度"
+
+msgid "Remote file editor"
+msgstr "远程文件编辑器"
+
+msgid "Used when double-clicking remote files. Saving uploads your changes automatically."
+msgstr "双击远程文件时使用，保存后会自动上传更改。"
+
+msgid "System text editor"
+msgstr "系统文本编辑器"
+
+msgid "Visual Studio Code"
+msgstr "Visual Studio Code"
+
+msgid "Custom application"
+msgstr "自定义程序"
+
+msgid "Editor application"
+msgstr "编辑程序"
+
+msgid "Choose the application used to edit remote files."
+msgstr "选择用于编辑远程文件的程序。"
+
+msgid "Application path"
+msgstr "程序路径"
+
+msgid "Select text editor"
+msgstr "选择文本编辑器"
+
+msgid "Applications"
+msgstr "应用程序"
+
+msgid "Open with"
+msgstr "打开方式"
+
+msgid "Choose application"
+msgstr "选择其他程序（设为默认）"
+
+msgid "Could not save editor settings"
+msgstr "无法保存编辑器设置"
+
+msgid "Choose an editor application in SSH settings."
+msgstr "请在 SSH 设置中选择编辑程序。"
+
+msgid "VS Code was not found. Choose its application in SSH settings."
+msgstr "未找到 VS Code，请在 SSH 设置中选择它的程序文件。"

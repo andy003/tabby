@@ -31,9 +31,12 @@ export class Command {
     touchBarTitle?: string
 
     weight?: number
+    /** Current state of a toggle command, when applicable. */
+    checked?: boolean
 
     static fromToolbarButton (button: ToolbarButton): Command {
         const command = new Command()
+        command.id = button.id
         command.label = button.title
         command.run = async () => button.click?.()
         command.icon = button.icon

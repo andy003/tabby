@@ -31,6 +31,10 @@ import { WelcomeTabComponent } from './components/welcomeTab.component'
 import { TransfersMenuComponent } from './components/transfersMenu.component'
 import { ProfileIconComponent } from './components/profileIcon.component'
 import { ProfileTreeComponent } from './components/profileTree.component'
+import { SessionContextMenuComponent } from './components/sessionContextMenu.component'
+import { WorkspaceToolbarComponent } from './components/workspaceToolbar.component'
+import { CustomButtonsModalComponent } from './components/customButtonsModal.component'
+import { FileSyncStatusComponent } from './components/fileSyncStatus.component'
 
 import { AutofocusDirective } from './directives/autofocus.directive'
 import { AlwaysVisibleTypeaheadDirective } from './directives/alwaysVisibleTypeahead.directive'
@@ -107,6 +111,9 @@ const PROVIDERS = [
     ],
     declarations: [
         AppRootComponent,
+        WorkspaceToolbarComponent,
+        CustomButtonsModalComponent,
+        FileSyncStatusComponent,
         CheckboxComponent,
         PromptModalComponent,
         StartPageComponent,
@@ -132,6 +139,7 @@ const PROVIDERS = [
         CdkAutoDropGroup,
         ProfileIconComponent,
         ProfileTreeComponent,
+        SessionContextMenuComponent,
         TabbyFormatedDatePipe,
     ],
     exports: [

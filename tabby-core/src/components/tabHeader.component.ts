@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Component, Input, Optional, Inject, HostBinding, HostListener, NgZone } from '@angular/core'
+import { Component, Input, Optional, Inject, HostBinding, HostListener, NgZone, ElementRef, SimpleChanges } from '@angular/core'
 import { auditTime } from 'rxjs'
 import { TabContextMenuItemProvider } from '../api/tabContextMenuProvider'
 import { BaseTabComponent } from './baseTab.component'
@@ -32,6 +32,7 @@ export class TabHeaderComponent extends BaseComponent {
         private hotkeys: HotkeysService,
         private platform: PlatformService,
         private zone: NgZone,
+        private element: ElementRef<HTMLElement>,
         @Optional() @Inject(TabContextMenuItemProvider) protected contextMenuProviders: TabContextMenuItemProvider[],
     ) {
         super()
@@ -53,6 +54,16 @@ export class TabHeaderComponent extends BaseComponent {
                 this.progress = progress
             })
         })
+    }
+
+    ngOnChanges (changes: SimpleChanges): void {
+        if ('active' in changes && changes.active.currentValue) {
+            this.zone.runOutsideAngular(() => {
+                requestAnimationFrame(() => {
+                    this.element.nativeElement.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+                })
+            })
+        }
     }
 
     async buildContextMenu (): Promise<MenuItemOptions[]> {
