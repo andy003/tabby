@@ -14,9 +14,9 @@ let target = path.resolve(__dirname, '../builtin-plugins')
 sh.mkdir('-p', target)
 fs.writeFileSync(path.join(target, 'package.json'), '{}')
 sh.cd(target)
-vars.builtinPlugins.forEach(plugin => {
+for (const plugin of vars.builtinPlugins) {
     if (plugin === 'tabby-web') {
-        return
+        continue
     }
     log.info('install', plugin)
     sh.cp('-r', path.join('..', plugin), '.')
@@ -27,7 +27,7 @@ vars.builtinPlugins.forEach(plugin => {
 
     log.info('rebuild', 'native')
     if (fs.existsSync('node_modules')) {
-        rebuild({
+        await rebuild({
             buildPath: path.resolve('.'),
             electronVersion: vars.electronVersion,
             arch: process.env.ARCH ?? process.arch,
@@ -36,5 +36,5 @@ vars.builtinPlugins.forEach(plugin => {
         })
     }
     sh.cd('..')
-})
+}
 fs.unlinkSync(path.join(target, 'package.json'), '{}')

@@ -4,12 +4,13 @@ import { build as builder } from 'electron-builder'
 import * as vars from './vars.mjs'
 
 const isTag = (process.env.GITHUB_REF || '').startsWith('refs/tags/')
+const debOnly = process.argv.includes('--deb')
 
 process.env.ARCH = (process.env.ARCH || process.arch) === 'arm' ? 'armv7l' : process.env.ARCH || process.arch
 
 builder({
     dir: true,
-    linux: ['deb', 'tar.gz', 'rpm', 'pacman', 'appimage'],
+    linux: debOnly ? ['deb'] : ['deb', 'tar.gz', 'rpm', 'pacman', 'appimage'],
     armv7l: process.env.ARCH === 'armv7l',
     arm64: process.env.ARCH === 'arm64',
     config: {
@@ -25,7 +26,7 @@ builder({
             },
         ] : undefined,
     },
-    publish: (process.env.KEYGEN_TOKEN && isTag) ? 'always' : 'never',
+    publish: (!debOnly && process.env.KEYGEN_TOKEN && isTag) ? 'always' : 'never',
 }).catch(e => {
     console.error(e)
     process.exit(1)

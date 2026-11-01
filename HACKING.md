@@ -100,6 +100,15 @@ Use **View > Toggle button bar** to hide or restore the bar.
 
 # Building an installer
 
+On Linux, build a Debian package with a single command after installing dependencies:
+
+```sh
+npm run build:deb
+```
+
+This compiles the app, prepares the built-in plugins and creates
+`dist/tabby-<version>-linux-<arch>.deb` for the current architecture.
+
 To build an installer, first complete a "normal" build as described above and then run:
 
 ```
